@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RosinService - Food Delivery</title>
+  <style>
+    :root {
+      --primary: #ff4757;
+      --primary-hover: #e03847;
+      --bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --text: #2f3542;
+      --accent: #ffa502;
+      --muted: #747d8c;
+    }
+
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    }
+
+    body { 
+      background-color: var(--bg); 
+      color: var(--text); 
+      padding-bottom: 90px; 
+    }
+
+    header {
+      background-color: var(--card-bg);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      position: sticky; 
+      top: 0; 
+      z-index: 10;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo { 
+      font-size: 1.5rem; 
+      font-weight: bold; 
+      color: var(--primary); 
+      text-decoration: none;
+    }
+    
+    .location-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9rem;
+      color: #57606f;
+      background: #f1f2f6;
+      padding: 0.4rem 0.9rem;
+      border-radius: 15px;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s;
+    }
+
+    .location-badge:hover {
+      background: #e4e7eb;
+    }
+
+    .nav-actions { 
+      display: flex; 
+      align-items: center; 
+      gap: 12px; 
+    }
+
+    .btn-auth {
+      background: transparent;
+      border: 1.5px solid var(--primary);
+      color: var(--primary);
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-auth.btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-auth:hover {
+      background: var(--primary-hover);
+      border-color: var(--primary-hover);
+      color: white;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+    }
+
+    .search-bar {
+      width: 100%;
+      max-width: 500px;
+      margin: 1.5rem auto 1rem auto;
+      display: flex;
+      padding: 0 1rem;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 0.8rem 1.2rem;
+      border: 1px solid #ddd;
+      border-radius: 25px;
+      outline: none;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    .search-bar input:focus {
+      border-color: var(--primary);
+    }
+
+    .categories {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 0 1rem 1rem 1rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      scrollbar-width: thin;
+    }
+
+    .chip {
+      background: #e4e7eb;
+      padding: 0.5rem 1.2rem;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-size: 0.9rem;
+      border: none;
+      color: var(--text);
+      transition: all 0.2s ease;
+    }
+
+    .chip.active { 
+      background: var(--primary); 
+      color: #fff; 
+    }
+
+    .food-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+      padding: 1rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-img { 
+      height: 140px; 
+      background-size: cover; 
+      background-position: center; 
+    }
+    
+    .card-body { 
+      padding: 1rem; 
+      display: flex; 
+      flex-direction: column; 
+      flex-grow: 1; 
+    }
+    
+    .card-header-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-title { 
+      font-size: 1.1rem; 
+      font-weight: 600; 
+      text-transform: capitalize; 
+    }
+    
+    .rating {
+      background: #fff8e7;
+      color: #d68910;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .card-desc { 
+      font-size: 0.85rem; 
+      color: var(--muted); 
+      margin-bottom: 1rem; 
+      flex-grow: 1; 
+    }
+    
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .price { 
+      font-weight: bold; 
+      color: var(--primary); 
+      font-size: 1.1rem; 
+    }
+    
+    .btn-add {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 0.4rem 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .btn-add:hover { 
+      background: var(--primary-hover); 
+    }
+
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 3rem;
+      color: var(--muted);
+    }
+
+    .cart-bar {
+      position: fixed;
+      bottom: 0; 
+      left: 0; 
+      right: 0;
+      background: var(--text);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 9;
+    }
+
+    .cart-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+
+    .cart-btn:hover {
+      background: var(--primary-hover);
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px; 
+      right: 15px;
+      cursor: pointer;
+      font-size: 1.4rem;
+      color: var(--muted);
+      background: none;
+      border: none;
+    }
+
+    .modal-content h2 { 
+      margin-bottom: 1rem; 
+      color: var(--text); 
+    }
+
+    .modal-content form { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 12px; 
+    }
+
+    .modal-content input {
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      outline: none;
+    }
+
+    .modal-content input:focus {
+      border-color: var(--primary);
+    }
+
+    .modal-content button[type="submit"] {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.8rem;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 5px;
+      transition: background 0.2s;
+    }
+
+    .modal-content button[type="submit"]:hover {
+      background: var(--primary-hover);
+    }
+
+    .modal-footer-text {
+      font-size: 0.85rem;
+      text-align: center;
+      margin-top: 1rem;
+      color: var(--muted);
+    }
+
+    .modal-footer-text span {
+      color: var(--primary);
+      cursor: pointer;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-container">
+      <div class="logo">🍕 ROSIN SERVICE</div>
+      <button class="location-badge" id="location-badge" onclick="handleLocationBadgeClick()" aria-label="Change location">
+        📍 <span id="delivery-location">Set Location</span>
+      </button>
+    </div>
+    <div class="nav-actions" id="auth-container">
+      <button class="btn-auth" onclick="openModal('login')">Log In</button>
+      <button class="btn-auth btn-primary" onclick="openModal('signup')">Sign Up</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Search for dishes or categories..." oninput="filterDishes()" aria-label="Search food dishes">
+    </div>
+
+    <div class="categories" role="tablist" aria-label="Food Categories">
+      <button class="chip active" onclick="selectCategory('All', this)">All</button>
+      <button class="chip" onclick="selectCategory('Burgers', this)">Burgers</button>
+      <button class="chip" onclick="selectCategory('Pizza', this)">Pizza</button>
+      <button class="chip" onclick="selectCategory('Sushi', this)">Sushi</button>
+      <button class="chip" onclick="selectCategory('Asian', this)">Asian</button>
+      <button class="chip" onclick="selectCategory('Mexican', this)">Mexican</button>
+      <button class="chip" onclick="selectCategory('Desserts', this)">Desserts</button>
+      <button class="chip" onclick="selectCategory('Drinks', this)">Drinks</button>
+    </div>
+
+    <div class="food-grid" id="food-grid">
+      <!-- Dynamic Content Rendered Here -->
+    </div>
+  </main>
+
+  <div class="cart-bar">
+    <div>
+      <span id="cart-count">0 items</span> | Total: <strong id="cart-total">$0.00</strong>
+    </div>
+    <button class="cart-btn" onclick="checkout()">Checkout</button>
+  </div>
+
+  <!-- Auth & Location Modal -->
+  <div class="modal" id="auth-modal" onclick="handleBackdropClick(event)">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal()" aria-label="Close Modal">&times;</button>
+      
+      <!-- Login View -->
+      <div id="login-view">
+        <h2>Welcome Back</h2>
+        <form id="login-form" onsubmit="handleAuth(event, 'login')">
+          <input type="email" id="login-email" placeholder="Email Address" required>
+          <input type="password" id="login-password" placeholder="Password" required>
+          <input type="text" id="login-location" placeholder="Delivery Location (e.g. New York, NY)" required>
+          <button type="submit">Log In</button>
+        </form>
+        <p class="modal-footer-text">Don't have an account? <span onclick="switchModal('signup')">Sign Up</span></p>
+      </div>
+
+      <!-- Signup View -->
+      <div id="signup-view" style="display: none;">
+        <h2>Create Account</h2>
+        <form id="signup-form" onsubmit="handleAuth(event, 'signup')">
+          <input type="text" id="signup-name" placeholder="Full Name" required>
+          <input type="email" id="signup-email" placeholder="Email Address" required>
+          <input type="password" id="signup-password" placeholder="Password" required>
+          <input type="text" id="signup-location" placeholder="Delivery Location (e.g. Los Angeles, CA)" required>
+          <button type="submit">Sign Up</button>
+        </form>
+        <p class="modal-footer-text">Already have an account? <span onclick="switchModal('login')">Log In</span></p>
+      </div>
+
+      <!-- Edit Location View -->
+      <div id="location-view" style="display: none;">
+        <h2>Update Location</h2>
+        <form id="location-form" onsubmit="handleLocationChange(event)">
+          <input type="text" id="edit-location-input" placeholder="Enter new address/city" required>
+          <button type="submit">Update Address</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const dishes = [
+      {
+        id: 1,
+        name: "Classic Cheeseburger",
+        category: "Burgers",
+        price: 8.99,
+        rating: 4.7,
+        desc: "Juicy beef patty with cheddar cheese, lettuce, and special sauce.",
+        img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80"
+      },
+      {
+        id: 2,
+        name: "Pepperoni Pizza",
+        category: "Pizza",
+        price: 12.50,
+        rating: 4.8,
+        desc: "Hand-tossed crust topped with fresh mozzarella and sliced pepperoni.",
+        img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=500&q=80"
+      },
+      {
+        id: 3,
+        name: "Tandoori Pizza",
+        category: "Pizza",
+        price: 14.50,
+        rating: 4.5,
+        desc: "Fresh tandoori chicken, red onions, and cilantro on garlic crust.",
+        img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=500&q=80"
+      },
+      {
+        id: 4,
+        name: "Salmon Roll (8pcs)",
+        category: "Sushi",
+        price: 10.99,
+        rating: 4.9,
+        desc: "Fresh salmon, avocado, and cucumber wrapped in nori and rice.",
+        img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=500&q=80"
+      },
+      {
+        id: 5,
+        name: "Chicken Pad Thai",
+        category: "Asian",
+        price: 11.99,
+        rating: 4.6,
+        desc: "Stir-fried rice noodles with chicken, crushed peanuts, and bean sprouts.",
+        img: "https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=500&q=80"
+      },
+      {
+        id: 6,
+        name: "Carne Asada Tacos",
+        category: "Mexican",
+        price: 9.50,
+        rating: 4.7,
+        desc: "Three grilled steak tacos topped with cilantro, onions, and fresh salsa.",
+        img: "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=500&q=80"
+      },
+      {
+        id: 7,
+        name: "Chocolate Molten Cake",
+        category: "Desserts",
+        price: 6.99,
+        rating: 4.9,
+        desc: "Rich chocolate cake filled with warm gooey fudge, served with ice cream.",
+        img: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=500&q=80"
+      },
+      {
+        id: 8,
+        name: "Iced Caramel Macchiato",
+        category: "Drinks",
+        price: 4.50,
+        rating: 4.4,
+        desc: "Espresso combined with vanilla syrup, milk, and caramel drizzle over ice.",
+        img: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=500&q=80"
+      }
+    ];
+
+    let currentCategory = "All";
+    let cart = [];
+    let currentUser = null;
+    let userLocation = null;
+
+    function renderDishes(items) {
+      const grid = document.getElementById('food-grid');
+      grid.innerHTML = '';
+
+      if (items.length === 0) {
+        grid.innerHTML = '<div class="no-results">No dishes found matching your search.</div>';
+        return;
+      }
+
+      items.forEach(dish => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-img" style="background-image: url('${dish.img}')"></div>
+          <div class="card-body">
+            <div class="card-header-info">
+              <div class="card-title">${dish.name}</div>
+              <div class="rating">★ ${dish.rating}</div>
+            </div>
+            <div class="card-desc">${dish.desc}</div>
+            <div class="card-footer">
+              <span class="price">$${dish.price.toFixed(2)}</span>
+              <button class="btn-add" onclick="addToCartById(${dish.id})">Add +</button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function filterDishes() {
+      const searchValue = document.getElementById('search-input').value.toLowerCase().trim();
+      const filtered = dishes.filter(dish => {
+        const matchesCategory = currentCategory === "All" || dish.category === currentCategory;
+        const matchesSearch = dish.name.toLowerCase().includes(searchValue) || 
+                              dish.desc.toLowerCase().includes(searchValue) ||
+                              dish.category.toLowerCase().includes(searchValue);
+        return matchesCategory && matchesSearch;
+      });
+      renderDishes(filtered);
+    }
+
+    function selectCategory(category, buttonElement) {
+      currentCategory = category;
+      document.querySelectorAll('.chip').forEach(btn => btn.classList.remove('active'));
+      buttonElement.classList.add('active');
+      filterDishes();
+    }
+
+    function addToCartById(id) {
+      const item = dishes.find(d => d.id === id);
+      if (item) {
+        cart.push(item);
+        updateCartUI();
+      }
+    }
+
+    function updateCartUI() {
+      const count = cart.length;
+      const total = cart.reduce((sum, item) => sum + item.price, 0);
+
+      document.getElementById('cart-count').innerText = `${count} item${count !== 1 ? 's' : ''}`;
+      document.getElementById('cart-total').innerText = `$${total.toFixed(2)}`;
+    }
+
+    function checkout() {
+      if (cart.length === 0) {
+        alert("Your cart is empty!");
+        return;
+      }
+
+      const total = cart.reduce((sum, item) => sum + item.price, 0);
+      const userMsg = currentUser ? `Thanks, ${currentUser}! ` : '';
+      const locationMsg = userLocation ? ` Delivering to: ${userLocation}.` : '';
+
+      alert(`${userMsg}Order placed! Total: $${total.toFixed(2)}.${locationMsg}`);
+      
+      cart = [];
+      updateCartUI();
+    }
+
+    /* Modal & Auth Logic */
+    function openModal(type) {
+      const modal = document.getElementById('auth-modal');
+      modal.classList.add('active');
+      switchModal(type);
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('auth-modal');
+      modal.classList.remove('active');
+      document.getElementById('login-form').reset();
+      document.getElementById('signup-form').reset();
+      document.getElementById('location-form').reset();
+    }
+
+    function handleBackdropClick(event) {
+      if (event.target.id === 'auth-modal') {
+        closeModal();
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    function switchModal(type) {
+      document.getElementById('login-view').style.display = type === 'login' ? 'block' : 'none';
+      document.getElementById('signup-view').style.display = type === 'signup' ? 'block' : 'none';
+      document.getElementById('location-view').style.display = type === 'location' ? 'block' : 'none';
+    }
+
+    function handleLocationBadgeClick() {
+      if (currentUser || userLocation) {
+        openModal('location');
+        document.getElementById('edit-location-input').value = userLocation || '';
+      } else {
+        openModal('login');
+      }
+    }
+
+    function handleLocationChange(event) {
+      event.preventDefault();
+      userLocation = document.getElementById('edit-location-input').value.trim() || "Default Address";
+      updateAuthUI();
+      closeModal();
+    }
+
+    function handleAuth(event, type) {
+      event.preventDefault();
+      if (type === 'signup') {
+        const nameInput = document.getElementById('signup-name').value.trim();
+        currentUser = nameInput || "User";
+        userLocation = document.getElementById('signup-location').value.trim() || "Default Address";
+      } else {
+        const emailInput = document.getElementById('login-email').value.trim();
+        currentUser = emailInput ? emailInput.split('@')[0] : "User";
+        userLocation = document.getElementById('login-location').value.trim() || "Default Address";
+      }
+      
+      updateAuthUI();
+      closeModal();
+    }
+
+    function updateAuthUI() {
+      const container = document.getElementById('auth-container');
+      const locationDisplay = document.getElementById('delivery-location');
+
+      locationDisplay.innerText = userLocation || "Set Location";
+
+      if (currentUser) {
+        container.innerHTML = `
+          <div class="user-profile">
+            <span>👤 ${currentUser}</span>
+            <button class="btn-auth" onclick="logout()">Log Out</button>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <button class="btn-auth" onclick="openModal('login')">Log In</button>
+          <button class="btn-auth btn-primary" onclick="openModal('signup')">Sign Up</button>
+        `;
+      }
+    }
+
+    function logout() {
+      currentUser = null;
+      userLocation = null;
+      document.getElementById('delivery-location').innerText = "Set Location";
+      updateAuthUI();
+    }
+
+    // Initial render
+    renderDishes(dishes);
+  </script>
+</body>
+</html>
