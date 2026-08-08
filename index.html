@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RosinService - Food Delivery</title>
+  <title>suuuuiiiimato - Food Delivery</title>
   <style>
     :root {
       --primary: #ff4757;
@@ -229,8 +229,14 @@
       color: var(--primary); 
       font-size: 1.1rem; 
     }
+
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
     
-    .btn-add {
+    .btn-add, .btn-qty {
       background: var(--primary);
       color: #fff;
       border: none;
@@ -241,7 +247,12 @@
       transition: background 0.2s;
     }
 
-    .btn-add:hover { 
+    .btn-qty {
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+    }
+
+    .btn-add:hover, .btn-qty:hover { 
       background: var(--primary-hover); 
     }
 
@@ -375,7 +386,7 @@
 
   <header>
     <div class="logo-container">
-      <div class="logo">🍕 ROSIN SERVICE</div>
+      <a href="#" class="logo">🍕 suuuuiiiimato</a>
       <button class="location-badge" id="location-badge" onclick="handleLocationBadgeClick()" aria-label="Change location">
         📍 <span id="delivery-location">Set Location</span>
       </button>
@@ -532,9 +543,15 @@
     ];
 
     let currentCategory = "All";
-    let cart = [];
+    let cart = {}; // Map of dishId -> quantity
     let currentUser = null;
     let userLocation = null;
+
+    function sanitizeText(str) {
+      const temp = document.createElement('div');
+      temp.textContent = str;
+      return temp.innerHTML;
+    }
 
     function renderDishes(items) {
       const grid = document.getElementById('food-grid');
@@ -546,19 +563,29 @@
       }
 
       items.forEach(dish => {
+        const qty = cart[dish.id] || 0;
         const card = document.createElement('div');
         card.className = 'card';
+        
+        const actionButtonHtml = qty > 0 
+          ? `<div class="qty-controls">
+               <button class="btn-qty" onclick="updateQuantity(${dish.id}, -1)">-</button>
+               <span>${qty}</span>
+               <button class="btn-qty" onclick="updateQuantity(${dish.id}, 1)">+</button>
+             </div>`
+          : `<button class="btn-add" onclick="updateQuantity(${dish.id}, 1)">Add +</button>`;
+
         card.innerHTML = `
           <div class="card-img" style="background-image: url('${dish.img}')"></div>
           <div class="card-body">
             <div class="card-header-info">
-              <div class="card-title">${dish.name}</div>
+              <div class="card-title">${sanitizeText(dish.name)}</div>
               <div class="rating">★ ${dish.rating}</div>
             </div>
-            <div class="card-desc">${dish.desc}</div>
+            <div class="card-desc">${sanitizeText(dish.desc)}</div>
             <div class="card-footer">
               <span class="price">$${dish.price.toFixed(2)}</span>
-              <button class="btn-add" onclick="addToCartById(${dish.id})">Add +</button>
+              ${actionButtonHtml}
             </div>
           </div>
         `;
@@ -585,36 +612,58 @@
       filterDishes();
     }
 
-    function addToCartById(id) {
-      const item = dishes.find(d => d.id === id);
-      if (item) {
-        cart.push(item);
-        updateCartUI();
+    function updateQuantity(id, change) {
+      const currentQty = cart[id] || 0;
+      const newQty = currentQty + change;
+
+      if (newQty <= 0) {
+        delete cart[id];
+      } else {
+        cart[id] = newQty;
       }
+
+      updateCartUI();
+      filterDishes(); // Refresh cards to reflect updated quantity state
     }
 
     function updateCartUI() {
-      const count = cart.length;
-      const total = cart.reduce((sum, item) => sum + item.price, 0);
+      let totalCount = 0;
+      let totalPrice = 0;
 
-      document.getElementById('cart-count').innerText = `${count} item${count !== 1 ? 's' : ''}`;
-      document.getElementById('cart-total').innerText = `$${total.toFixed(2)}`;
+      Object.keys(cart).forEach(id => {
+        const item = dishes.find(d => d.id === parseInt(id, 10));
+        if (item) {
+          const qty = cart[id];
+          totalCount += qty;
+          totalPrice += item.price * qty;
+        }
+      });
+
+      document.getElementById('cart-count').innerText = `${totalCount} item${totalCount !== 1 ? 's' : ''}`;
+      document.getElementById('cart-total').innerText = `$${totalPrice.toFixed(2)}`;
     }
 
     function checkout() {
-      if (cart.length === 0) {
+      const totalCount = Object.values(cart).reduce((a, b) => a + b, 0);
+      if (totalCount === 0) {
         alert("Your cart is empty!");
         return;
       }
 
-      const total = cart.reduce((sum, item) => sum + item.price, 0);
-      const userMsg = currentUser ? `Thanks, ${currentUser}! ` : '';
-      const locationMsg = userLocation ? ` Delivering to: ${userLocation}.` : '';
+      let totalPrice = 0;
+      Object.keys(cart).forEach(id => {
+        const item = dishes.find(d => d.id === parseInt(id, 10));
+        if (item) totalPrice += item.price * cart[id];
+      });
 
-      alert(`${userMsg}Order placed! Total: $${total.toFixed(2)}.${locationMsg}`);
+      const userMsg = currentUser ? `Thanks, ${sanitizeText(currentUser)}! ` : '';
+      const locationMsg = userLocation ? ` Delivering to: ${sanitizeText(userLocation)}.` : '';
+
+      alert(`${userMsg}Order placed! Total: $${totalPrice.toFixed(2)}.${locationMsg}`);
       
-      cart = [];
+      cart = {};
       updateCartUI();
+      filterDishes();
     }
 
     /* Modal & Auth Logic */
@@ -689,7 +738,7 @@
       if (currentUser) {
         container.innerHTML = `
           <div class="user-profile">
-            <span>👤 ${currentUser}</span>
+            <span>👤 ${sanitizeText(currentUser)}</span>
             <button class="btn-auth" onclick="logout()">Log Out</button>
           </div>
         `;
