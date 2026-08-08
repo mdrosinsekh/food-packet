@@ -127,7 +127,7 @@
     }
 
     .location-btn .loc-text {
-      max-width: 140px;
+      max-width: 160px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -505,6 +505,29 @@
       transform: translateY(-1px);
     }
 
+    /* Ordering for someone else toggle style */
+    .order-else-box {
+      background: var(--badge-bg);
+      border: 1px solid var(--border);
+      padding: 0.8rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .order-else-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .order-else-toggle input {
+      cursor: pointer;
+      accent-color: var(--primary);
+    }
+
     .divider-or {
       display: flex;
       align-items: center;
@@ -684,19 +707,31 @@
         <p class="modal-footer-text">Already have an account? <span onclick="switchModal('login')">Log In</span></p>
       </div>
 
-      <!-- Edit/GPS Location View -->
+      <!-- Edit / GPS / Order For Others Location View -->
       <div id="location-view" style="display: none;">
-        <h2>Set Delivery Location</h2>
+        <h2>Set Delivery Address</h2>
         
         <button type="button" class="gps-btn" onclick="fetchGPSLocation()">
-          <span>🎯</span> Use My Current GPS Location
+          <span>🎯</span> Detect Current GPS Location
         </button>
 
-        <div class="divider-or">OR ENTER MANUALLY</div>
+        <div class="divider-or">OR ENTER DETAILS</div>
+
+        <div class="order-else-box">
+          <label class="order-else-toggle">
+            <input type="checkbox" id="order-for-others-checkbox" onchange="toggleOrderForOthers(this.checked)">
+            <span>🎁 Ordering for someone else?</span>
+          </label>
+        </div>
 
         <form id="location-form" onsubmit="handleLocationChange(event)">
-          <input type="text" id="edit-location-input" placeholder="Enter landmark, area or city" required>
-          <button type="submit">Save Location</button>
+          <div id="recipient-fields" style="display: none; flex-direction: column; gap: 12px; margin-bottom: 8px;">
+            <input type="text" id="recipient-name" placeholder="Recipient's Name">
+            <input type="tel" id="recipient-phone" placeholder="Recipient's Phone Number">
+          </div>
+
+          <input type="text" id="edit-location-input" placeholder="Enter landmark, area or city address" required>
+          <button type="submit">Save Address</button>
         </form>
       </div>
 
@@ -792,6 +827,7 @@
     let currentUser = localStorage.getItem('suuuuiiiimato_user') || null;
     let userLocation = localStorage.getItem('suuuuiiiimato_location') || null;
     let currentTheme = localStorage.getItem('suuuuiiiimato_theme') || 'light';
+    let recipientInfo = JSON.parse(localStorage.getItem('suuuuiiiimato_recipient')) || null;
 
     function sanitizeText(str) {
       const temp = document.createElement('div');
@@ -940,13 +976,19 @@
       const userDisplay = currentUser ? sanitizeText(currentUser) : 'Guest Customer';
       const locationDisplay = userLocation ? sanitizeText(userLocation) : 'Not specified';
 
+      let recipientHtml = '';
+      if (recipientInfo && recipientInfo.name) {
+        recipientHtml = `<p><strong>Recipient:</strong> ${sanitizeText(recipientInfo.name)} (${sanitizeText(recipientInfo.phone || 'No phone')})</p>`;
+      }
+
       billContainer.innerHTML = `
         <div class="bill-header">
           <h3>🍕 suuuuiiiimato Invoice</h3>
           <p>Order ID: #SUIII-${Math.floor(100000 + Math.random() * 900000)}</p>
           <p><small>${new Date().toLocaleString('en-IN')}</small></p>
         </div>
-        <p><strong>Customer:</strong> ${userDisplay}</p>
+        <p><strong>Ordered By:</strong> ${userDisplay}</p>
+        ${recipientHtml}
         <p style="margin-bottom:0.8rem;"><strong>Deliver to:</strong> ${locationDisplay}</p>
         <div style="border-top: 1px dashed var(--border); padding-top: 0.5rem; margin-top: 0.5rem;">
           ${itemsHtml}
@@ -976,7 +1018,6 @@
           const lon = position.coords.longitude;
           
           try {
-            // Attempt reverse geocoding using OpenStreetMap Nominatim
             const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
             const data = await response.json();
             
@@ -989,7 +1030,6 @@
             updateAuthUI();
             closeModal();
           } catch (err) {
-            // Fallback to raw coordinate string if API fails
             userLocation = `GPS (${lat.toFixed(3)}, ${lon.toFixed(3)})`;
             localStorage.setItem('suuuuiiiimato_location', userLocation);
             updateAuthUI();
@@ -1054,14 +1094,36 @@
       document.getElementById('edit-location-input').value = userLocation || '';
     }
 
+    function toggleOrderForOthers(isChecked) {
+      const recipientFields = document.getElementById('recipient-fields');
+      recipientFields.style.display = isChecked ? 'flex' : 'none';
+      if (!isChecked) {
+        recipientInfo = null;
+        localStorage.removeItem('suuuuiiiimato_recipient');
+      }
+    }
+
     function handleLocationChange(event) {
       event.preventDefault();
       userLocation = document.getElementById('edit-location-input').value.trim() || "Set Location";
+      
+      const isForOthers = document.getElementById('order-for-others-checkbox').checked;
+      if (isForOthers) {
+        const name = document.getElementById('recipient-name').value.trim();
+        const phone = document.getElementById('recipient-phone').value.trim();
+        recipientInfo = { name, phone };
+        localStorage.setItem('suuuuiiiimato_recipient', JSON.stringify(recipientInfo));
+      } else {
+        recipientInfo = null;
+        localStorage.removeItem('suuuuiiiimato_recipient');
+      }
+
       localStorage.setItem('suuuuiiiimato_location', userLocation);
       updateAuthUI();
       closeModal();
     }
 
+    /* Auth handler simultaneously syncs location */
     function handleAuth(event, type) {
       event.preventDefault();
       if (type === 'signup') {
@@ -1085,7 +1147,8 @@
       const container = document.getElementById('auth-container');
       const locationDisplay = document.getElementById('delivery-location');
 
-      locationDisplay.innerText = userLocation || "Set Location";
+      let prefix = recipientInfo && recipientInfo.name ? "🎁 " : "";
+      locationDisplay.innerText = prefix + (userLocation || "Set Location");
 
       if (currentUser) {
         container.innerHTML = `
@@ -1111,8 +1174,10 @@
     function logout() {
       currentUser = null;
       userLocation = null;
+      recipientInfo = null;
       localStorage.removeItem('suuuuiiiimato_user');
       localStorage.removeItem('suuuuiiiimato_location');
+      localStorage.removeItem('suuuuiiiimato_recipient');
       document.getElementById('delivery-location').innerText = "Set Location";
       updateAuthUI();
     }
