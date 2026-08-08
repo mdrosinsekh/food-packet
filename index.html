@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>suuuuiiiimato - Food Delivery</title>
   <style>
+    /* Theme CSS Variables */
     :root {
       --primary: #ff4757;
       --primary-hover: #e03847;
@@ -13,6 +14,35 @@
       --text: #2f3542;
       --accent: #ffa502;
       --muted: #747d8c;
+      --border: #ddd;
+      --chip-bg: #e4e7eb;
+      --badge-bg: #f1f2f6;
+    }
+
+    [data-theme="dark"] {
+      --primary: #ff5252;
+      --primary-hover: #ff7979;
+      --bg: #1e1e2e;
+      --card-bg: #2a2a3c;
+      --text: #f1f2f6;
+      --accent: #ffbe76;
+      --muted: #a4b0be;
+      --border: #40405c;
+      --chip-bg: #383850;
+      --badge-bg: #383850;
+    }
+
+    [data-theme="sunset"] {
+      --primary: #e056fd;
+      --primary-hover: #be2edd;
+      --bg: #2c142e;
+      --card-bg: #3b1c3f;
+      --text: #f7d794;
+      --accent: #f5cd79;
+      --muted: #cf6a87;
+      --border: #57295d;
+      --chip-bg: #4a2350;
+      --badge-bg: #4a2350;
     }
 
     * { 
@@ -26,6 +56,7 @@
       background-color: var(--bg); 
       color: var(--text); 
       padding-bottom: 90px; 
+      transition: background-color 0.3s, color 0.3s;
     }
 
     header {
@@ -34,10 +65,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       position: sticky; 
       top: 0; 
       z-index: 10;
+      transition: background-color 0.3s;
     }
 
     .logo-container {
@@ -58,23 +90,34 @@
       align-items: center;
       gap: 5px;
       font-size: 0.9rem;
-      color: #57606f;
-      background: #f1f2f6;
+      color: var(--text);
+      background: var(--badge-bg);
       padding: 0.4rem 0.9rem;
       border-radius: 15px;
       cursor: pointer;
       border: none;
-      transition: background 0.2s;
+      transition: background 0.2s, color 0.2s;
     }
 
     .location-badge:hover {
-      background: #e4e7eb;
+      opacity: 0.9;
     }
 
     .nav-actions { 
       display: flex; 
       align-items: center; 
       gap: 12px; 
+    }
+
+    .theme-select {
+      background: var(--chip-bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
     }
 
     .btn-auth {
@@ -117,7 +160,9 @@
     .search-bar input {
       width: 100%;
       padding: 0.8rem 1.2rem;
-      border: 1px solid #ddd;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
       border-radius: 25px;
       outline: none;
       font-size: 1rem;
@@ -139,7 +184,7 @@
     }
 
     .chip {
-      background: #e4e7eb;
+      background: var(--chip-bg);
       padding: 0.5rem 1.2rem;
       border-radius: 20px;
       cursor: pointer;
@@ -168,9 +213,10 @@
       background: var(--card-bg);
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       display: flex;
       flex-direction: column;
+      border: 1px solid var(--border);
     }
 
     .card-img { 
@@ -268,13 +314,15 @@
       bottom: 0; 
       left: 0; 
       right: 0;
-      background: var(--text);
-      color: white;
+      background: var(--card-bg);
+      border-top: 1px solid var(--border);
+      color: var(--text);
       padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       z-index: 9;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
     }
 
     .cart-btn {
@@ -300,7 +348,7 @@
       left: 0; 
       width: 100%; 
       height: 100%;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.6);
       z-index: 100;
       justify-content: center;
       align-items: center;
@@ -311,12 +359,16 @@
     }
 
     .modal-content {
-      background: white;
+      background: var(--card-bg);
+      color: var(--text);
       padding: 2rem;
       border-radius: 12px;
       width: 90%;
-      max-width: 400px;
+      max-width: 450px;
       position: relative;
+      border: 1px solid var(--border);
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     .close-btn {
@@ -343,7 +395,9 @@
 
     .modal-content input {
       padding: 0.8rem;
-      border: 1px solid #ddd;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
       border-radius: 6px;
       outline: none;
     }
@@ -380,6 +434,58 @@
       cursor: pointer;
       font-weight: 600;
     }
+
+    /* Printable Bill Receipt Styles */
+    .bill-receipt {
+      border: 1px dashed var(--border);
+      padding: 1rem;
+      border-radius: 8px;
+      background: var(--bg);
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .bill-header {
+      text-align: center;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+    }
+
+    .bill-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.4rem;
+    }
+
+    .bill-row.total {
+      border-top: 1px solid var(--border);
+      padding-top: 0.5rem;
+      font-weight: bold;
+      font-size: 1.05rem;
+      color: var(--primary);
+    }
+
+    .btn-print {
+      background: #2ed573;
+      color: white;
+      border: none;
+      padding: 0.8rem;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .btn-print:hover {
+      background: #26af5f;
+    }
+
+    @media print {
+      body * { visibility: hidden; }
+      #bill-receipt-content, #bill-receipt-content * { visibility: visible; }
+      #bill-receipt-content { position: absolute; left: 0; top: 0; width: 100%; color: #000; }
+    }
   </style>
 </head>
 <body>
@@ -391,9 +497,16 @@
         📍 <span id="delivery-location">Set Location</span>
       </button>
     </div>
-    <div class="nav-actions" id="auth-container">
-      <button class="btn-auth" onclick="openModal('login')">Log In</button>
-      <button class="btn-auth btn-primary" onclick="openModal('signup')">Sign Up</button>
+    <div class="nav-actions">
+      <select class="theme-select" id="theme-selector" onchange="changeTheme(this.value)">
+        <option value="light">☀️ Light</option>
+        <option value="dark">🌙 Dark</option>
+        <option value="sunset">🌅 Sunset</option>
+      </select>
+      <div id="auth-container" style="display: flex; gap: 12px; align-items: center;">
+        <button class="btn-auth" onclick="openModal('login')">Log In</button>
+        <button class="btn-auth btn-primary" onclick="openModal('signup')">Sign Up</button>
+      </div>
     </div>
   </header>
 
@@ -420,12 +533,12 @@
 
   <div class="cart-bar">
     <div>
-      <span id="cart-count">0 items</span> | Total: <strong id="cart-total">$0.00</strong>
+      <span id="cart-count">0 items</span> | Total: <strong id="cart-total">₹0.00</strong>
     </div>
     <button class="cart-btn" onclick="checkout()">Checkout</button>
   </div>
 
-  <!-- Auth & Location Modal -->
+  <!-- Auth & Location & Bill Modal -->
   <div class="modal" id="auth-modal" onclick="handleBackdropClick(event)">
     <div class="modal-content">
       <button class="close-btn" onclick="closeModal()" aria-label="Close Modal">&times;</button>
@@ -436,7 +549,7 @@
         <form id="login-form" onsubmit="handleAuth(event, 'login')">
           <input type="email" id="login-email" placeholder="Email Address" required>
           <input type="password" id="login-password" placeholder="Password" required>
-          <input type="text" id="login-location" placeholder="Delivery Location (e.g. New York, NY)" required>
+          <input type="text" id="login-location" placeholder="Delivery Location (e.g. Mumbai, MH)" required>
           <button type="submit">Log In</button>
         </form>
         <p class="modal-footer-text">Don't have an account? <span onclick="switchModal('signup')">Sign Up</span></p>
@@ -449,7 +562,7 @@
           <input type="text" id="signup-name" placeholder="Full Name" required>
           <input type="email" id="signup-email" placeholder="Email Address" required>
           <input type="password" id="signup-password" placeholder="Password" required>
-          <input type="text" id="signup-location" placeholder="Delivery Location (e.g. Los Angeles, CA)" required>
+          <input type="text" id="signup-location" placeholder="Delivery Location (e.g. Delhi, DL)" required>
           <button type="submit">Sign Up</button>
         </form>
         <p class="modal-footer-text">Already have an account? <span onclick="switchModal('login')">Log In</span></p>
@@ -463,16 +576,26 @@
           <button type="submit">Update Address</button>
         </form>
       </div>
+
+      <!-- Bill Receipt View -->
+      <div id="bill-view" style="display: none;">
+        <h2>Order Confirmation</h2>
+        <div class="bill-receipt" id="bill-receipt-content">
+          <!-- Dynamically Generated Bill -->
+        </div>
+        <button class="btn-print" onclick="window.print()">🖨️ Print Receipt</button>
+      </div>
     </div>
   </div>
 
   <script>
+    // Dishes converted to Indian Rupees (₹)
     const dishes = [
       {
         id: 1,
         name: "Classic Cheeseburger",
         category: "Burgers",
-        price: 8.99,
+        price: 249.00,
         rating: 4.7,
         desc: "Juicy beef patty with cheddar cheese, lettuce, and special sauce.",
         img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80"
@@ -481,25 +604,25 @@
         id: 2,
         name: "Pepperoni Pizza",
         category: "Pizza",
-        price: 12.50,
+        price: 499.00,
         rating: 4.8,
         desc: "Hand-tossed crust topped with fresh mozzarella and sliced pepperoni.",
         img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=500&q=80"
       },
       {
         id: 3,
-        name: "Tandoori Pizza",
+        name: "Tandoori Paneer Pizza",
         category: "Pizza",
-        price: 14.50,
+        price: 549.00,
         rating: 4.5,
-        desc: "Fresh tandoori chicken, red onions, and cilantro on garlic crust.",
+        desc: "Fresh tandoori paneer, red onions, and cilantro on garlic crust.",
         img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=500&q=80"
       },
       {
         id: 4,
         name: "Salmon Roll (8pcs)",
         category: "Sushi",
-        price: 10.99,
+        price: 699.00,
         rating: 4.9,
         desc: "Fresh salmon, avocado, and cucumber wrapped in nori and rice.",
         img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=500&q=80"
@@ -508,25 +631,25 @@
         id: 5,
         name: "Chicken Pad Thai",
         category: "Asian",
-        price: 11.99,
+        price: 389.00,
         rating: 4.6,
         desc: "Stir-fried rice noodles with chicken, crushed peanuts, and bean sprouts.",
         img: "https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=500&q=80"
       },
       {
         id: 6,
-        name: "Carne Asada Tacos",
+        name: "Paneer Tikka Tacos",
         category: "Mexican",
-        price: 9.50,
+        price: 299.00,
         rating: 4.7,
-        desc: "Three grilled steak tacos topped with cilantro, onions, and fresh salsa.",
+        desc: "Three grilled paneer tacos topped with cilantro, onions, and fresh salsa.",
         img: "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=500&q=80"
       },
       {
         id: 7,
         name: "Chocolate Molten Cake",
         category: "Desserts",
-        price: 6.99,
+        price: 199.00,
         rating: 4.9,
         desc: "Rich chocolate cake filled with warm gooey fudge, served with ice cream.",
         img: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=500&q=80"
@@ -535,7 +658,7 @@
         id: 8,
         name: "Iced Caramel Macchiato",
         category: "Drinks",
-        price: 4.50,
+        price: 149.00,
         rating: 4.4,
         desc: "Espresso combined with vanilla syrup, milk, and caramel drizzle over ice.",
         img: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=500&q=80"
@@ -543,14 +666,23 @@
     ];
 
     let currentCategory = "All";
-    let cart = {}; // Map of dishId -> quantity
-    let currentUser = null;
-    let userLocation = null;
+    let cart = JSON.parse(localStorage.getItem('suuuuiiiimato_cart')) || {};
+    let currentUser = localStorage.getItem('suuuuiiiimato_user') || null;
+    let userLocation = localStorage.getItem('suuuuiiiimato_location') || null;
+    let currentTheme = localStorage.getItem('suuuuiiiimato_theme') || 'light';
 
     function sanitizeText(str) {
       const temp = document.createElement('div');
       temp.textContent = str;
       return temp.innerHTML;
+    }
+
+    /* Theme Switcher */
+    function changeTheme(theme) {
+      currentTheme = theme;
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('suuuuiiiimato_theme', theme);
+      document.getElementById('theme-selector').value = theme;
     }
 
     function renderDishes(items) {
@@ -584,7 +716,7 @@
             </div>
             <div class="card-desc">${sanitizeText(dish.desc)}</div>
             <div class="card-footer">
-              <span class="price">$${dish.price.toFixed(2)}</span>
+              <span class="price">₹${dish.price.toFixed(2)}</span>
               ${actionButtonHtml}
             </div>
           </div>
@@ -622,8 +754,9 @@
         cart[id] = newQty;
       }
 
+      localStorage.setItem('suuuuiiiimato_cart', JSON.stringify(cart));
       updateCartUI();
-      filterDishes(); // Refresh cards to reflect updated quantity state
+      filterDishes();
     }
 
     function updateCartUI() {
@@ -640,7 +773,7 @@
       });
 
       document.getElementById('cart-count').innerText = `${totalCount} item${totalCount !== 1 ? 's' : ''}`;
-      document.getElementById('cart-total').innerText = `$${totalPrice.toFixed(2)}`;
+      document.getElementById('cart-total').innerText = `₹${totalPrice.toFixed(2)}`;
     }
 
     function checkout() {
@@ -650,20 +783,61 @@
         return;
       }
 
-      let totalPrice = 0;
-      Object.keys(cart).forEach(id => {
-        const item = dishes.find(d => d.id === parseInt(id, 10));
-        if (item) totalPrice += item.price * cart[id];
-      });
+      generateBill();
+      openModal('bill');
 
-      const userMsg = currentUser ? `Thanks, ${sanitizeText(currentUser)}! ` : '';
-      const locationMsg = userLocation ? ` Delivering to: ${sanitizeText(userLocation)}.` : '';
-
-      alert(`${userMsg}Order placed! Total: $${totalPrice.toFixed(2)}.${locationMsg}`);
-      
+      // Clear Cart after checkout receipt generation
       cart = {};
+      localStorage.removeItem('suuuuiiiimato_cart');
       updateCartUI();
       filterDishes();
+    }
+
+    function generateBill() {
+      const billContainer = document.getElementById('bill-receipt-content');
+      let itemsHtml = '';
+      let subtotal = 0;
+
+      Object.keys(cart).forEach(id => {
+        const item = dishes.find(d => d.id === parseInt(id, 10));
+        if (item) {
+          const qty = cart[id];
+          const itemTotal = item.price * qty;
+          subtotal += itemTotal;
+          itemsHtml += `
+            <div class="bill-row">
+              <span>${sanitizeText(item.name)} x ${qty}</span>
+              <span>₹${itemTotal.toFixed(2)}</span>
+            </div>
+          `;
+        }
+      });
+
+      const gst = subtotal * 0.05; // 5% GST
+      const deliveryFee = 40.00; // Flat ₹40 delivery
+      const grandTotal = subtotal + gst + deliveryFee;
+
+      const userDisplay = currentUser ? sanitizeText(currentUser) : 'Guest Customer';
+      const locationDisplay = userLocation ? sanitizeText(userLocation) : 'Not specified';
+
+      billContainer.innerHTML = `
+        <div class="bill-header">
+          <h3>🍕 suuuuiiiimato Invoice</h3>
+          <p>Order ID: #SUIII-${Math.floor(100000 + Math.random() * 900000)}</p>
+          <p><small>${new Date().toLocaleString('en-IN')}</small></p>
+        </div>
+        <p><strong>Customer:</strong> ${userDisplay}</p>
+        <p style="margin-bottom:0.8rem;"><strong>Deliver to:</strong> ${locationDisplay}</p>
+        <div style="border-top: 1px dashed var(--border); padding-top: 0.5rem; margin-top: 0.5rem;">
+          ${itemsHtml}
+        </div>
+        <div style="border-top: 1px dashed var(--border); margin-top:0.5rem; padding-top:0.5rem;">
+          <div class="bill-row"><span>Subtotal:</span><span>₹${subtotal.toFixed(2)}</span></div>
+          <div class="bill-row"><span>GST (5%):</span><span>₹${gst.toFixed(2)}</span></div>
+          <div class="bill-row"><span>Delivery Fee:</span><span>₹${deliveryFee.toFixed(2)}</span></div>
+          <div class="bill-row total"><span>Grand Total:</span><span>₹${grandTotal.toFixed(2)}</span></div>
+        </div>
+      `;
     }
 
     /* Modal & Auth Logic */
@@ -695,6 +869,7 @@
       document.getElementById('login-view').style.display = type === 'login' ? 'block' : 'none';
       document.getElementById('signup-view').style.display = type === 'signup' ? 'block' : 'none';
       document.getElementById('location-view').style.display = type === 'location' ? 'block' : 'none';
+      document.getElementById('bill-view').style.display = type === 'bill' ? 'block' : 'none';
     }
 
     function handleLocationBadgeClick() {
@@ -709,6 +884,7 @@
     function handleLocationChange(event) {
       event.preventDefault();
       userLocation = document.getElementById('edit-location-input').value.trim() || "Default Address";
+      localStorage.setItem('suuuuiiiimato_location', userLocation);
       updateAuthUI();
       closeModal();
     }
@@ -725,6 +901,9 @@
         userLocation = document.getElementById('login-location').value.trim() || "Default Address";
       }
       
+      localStorage.setItem('suuuuiiiimato_user', currentUser);
+      localStorage.setItem('suuuuiiiimato_location', userLocation);
+
       updateAuthUI();
       closeModal();
     }
@@ -753,11 +932,16 @@
     function logout() {
       currentUser = null;
       userLocation = null;
+      localStorage.removeItem('suuuuiiiimato_user');
+      localStorage.removeItem('suuuuiiiimato_location');
       document.getElementById('delivery-location').innerText = "Set Location";
       updateAuthUI();
     }
 
-    // Initial render
+    // Initialize application state
+    changeTheme(currentTheme);
+    updateAuthUI();
+    updateCartUI();
     renderDishes(dishes);
   </script>
 </body>
