@@ -17,6 +17,7 @@
       --border: #ddd;
       --chip-bg: #e4e7eb;
       --badge-bg: #f1f2f6;
+      --search-shadow: rgba(0, 0, 0, 0.08);
     }
 
     [data-theme="dark"] {
@@ -30,6 +31,7 @@
       --border: #40405c;
       --chip-bg: #383850;
       --badge-bg: #383850;
+      --search-shadow: rgba(0, 0, 0, 0.3);
     }
 
     [data-theme="sunset"] {
@@ -43,6 +45,7 @@
       --border: #57295d;
       --chip-bg: #4a2350;
       --badge-bg: #4a2350;
+      --search-shadow: rgba(0, 0, 0, 0.4);
     }
 
     * { 
@@ -78,29 +81,54 @@
       gap: 15px;
     }
 
+    /* Logo styled in Times New Roman */
     .logo { 
-      font-size: 1.5rem; 
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 1.8rem; 
       font-weight: bold; 
+      letter-spacing: -0.5px;
       color: var(--primary); 
       text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .logo span.logo-icon {
+      font-family: 'Segoe UI', sans-serif;
     }
     
+    /* Location Badge with Icons */
     .location-badge {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       font-size: 0.9rem;
+      font-weight: 600;
       color: var(--text);
       background: var(--badge-bg);
-      padding: 0.4rem 0.9rem;
-      border-radius: 15px;
+      padding: 0.45rem 1rem;
+      border-radius: 20px;
       cursor: pointer;
-      border: none;
-      transition: background 0.2s, color 0.2s;
+      border: 1px solid var(--border);
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
     }
 
     .location-badge:hover {
-      opacity: 0.9;
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .location-badge .loc-icon {
+      color: var(--primary);
+      font-size: 1rem;
+    }
+
+    .location-badge .chevron-icon {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-left: 2px;
     }
 
     .nav-actions { 
@@ -113,22 +141,26 @@
       background: var(--chip-bg);
       color: var(--text);
       border: 1px solid var(--border);
-      padding: 0.4rem 0.8rem;
+      padding: 0.45rem 0.8rem;
       border-radius: 20px;
       font-weight: 600;
       cursor: pointer;
       outline: none;
     }
 
+    /* Auth Buttons with Icons */
     .btn-auth {
       background: transparent;
       border: 1.5px solid var(--primary);
       color: var(--primary);
-      padding: 0.4rem 1rem;
+      padding: 0.45rem 1.1rem;
       border-radius: 20px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
     }
 
     .btn-auth.btn-primary {
@@ -140,6 +172,8 @@
       background: var(--primary-hover);
       border-color: var(--primary-hover);
       color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(255, 71, 87, 0.25);
     }
 
     .user-profile {
@@ -149,28 +183,52 @@
       font-weight: 600;
     }
 
+    /* Stylish Search Bar */
     .search-bar {
       width: 100%;
-      max-width: 500px;
-      margin: 1.5rem auto 1rem auto;
+      max-width: 580px;
+      margin: 2rem auto 1.5rem auto;
       display: flex;
       padding: 0 1rem;
     }
 
+    .search-wrapper {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1.2rem;
+      font-size: 1.1rem;
+      color: var(--muted);
+      pointer-events: none;
+      transition: color 0.2s;
+    }
+
     .search-bar input {
       width: 100%;
-      padding: 0.8rem 1.2rem;
-      border: 1px solid var(--border);
+      padding: 0.9rem 1.2rem 0.9rem 3rem;
+      border: 2px solid var(--border);
       background: var(--card-bg);
       color: var(--text);
-      border-radius: 25px;
+      border-radius: 30px;
       outline: none;
       font-size: 1rem;
-      transition: border-color 0.2s;
+      box-shadow: 0 4px 15px var(--search-shadow);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .search-bar input:focus {
       border-color: var(--primary);
+      box-shadow: 0 6px 20px rgba(255, 71, 87, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .search-bar input:focus + .search-icon {
+      color: var(--primary);
     }
 
     .categories {
@@ -452,6 +510,11 @@
       padding-bottom: 0.5rem;
     }
 
+    .bill-header h3 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 1.4rem;
+    }
+
     .bill-row {
       display: flex;
       justify-content: space-between;
@@ -492,9 +555,11 @@
 
   <header>
     <div class="logo-container">
-      <a href="#" class="logo">🍕 suuuuiiiimato</a>
+      <a href="#" class="logo"><span class="logo-icon">🍕</span> suuuuiiiimato</a>
       <button class="location-badge" id="location-badge" onclick="handleLocationBadgeClick()" aria-label="Change location">
-        📍 <span id="delivery-location">Set Location</span>
+        <span class="loc-icon">📍</span>
+        <span id="delivery-location">Set Location</span>
+        <span class="chevron-icon">▼</span>
       </button>
     </div>
     <div class="nav-actions">
@@ -504,15 +569,22 @@
         <option value="sunset">🌅 Sunset</option>
       </select>
       <div id="auth-container" style="display: flex; gap: 12px; align-items: center;">
-        <button class="btn-auth" onclick="openModal('login')">Log In</button>
-        <button class="btn-auth btn-primary" onclick="openModal('signup')">Sign Up</button>
+        <button class="btn-auth" onclick="openModal('login')">
+          <span>🔑</span> Log In
+        </button>
+        <button class="btn-auth btn-primary" onclick="openModal('signup')">
+          <span>✨</span> Sign Up
+        </button>
       </div>
     </div>
   </header>
 
   <main>
     <div class="search-bar">
-      <input type="text" id="search-input" placeholder="Search for dishes or categories..." oninput="filterDishes()" aria-label="Search food dishes">
+      <div class="search-wrapper">
+        <input type="text" id="search-input" placeholder="Search delicious dishes, cuisines, or drinks..." oninput="filterDishes()" aria-label="Search food dishes">
+        <span class="search-icon">🔍</span>
+      </div>
     </div>
 
     <div class="categories" role="tablist" aria-label="Food Categories">
@@ -918,13 +990,19 @@
         container.innerHTML = `
           <div class="user-profile">
             <span>👤 ${sanitizeText(currentUser)}</span>
-            <button class="btn-auth" onclick="logout()">Log Out</button>
+            <button class="btn-auth" onclick="logout()">
+              <span>🚪</span> Log Out
+            </button>
           </div>
         `;
       } else {
         container.innerHTML = `
-          <button class="btn-auth" onclick="openModal('login')">Log In</button>
-          <button class="btn-auth btn-primary" onclick="openModal('signup')">Sign Up</button>
+          <button class="btn-auth" onclick="openModal('login')">
+            <span>🔑</span> Log In
+          </button>
+          <button class="btn-auth btn-primary" onclick="openModal('signup')">
+            <span>✨</span> Sign Up
+          </button>
         `;
       }
     }
