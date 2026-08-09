@@ -84,6 +84,8 @@
       top: 0; 
       z-index: 10;
       transition: background-color 0.3s;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
     .logo-container {
@@ -340,6 +342,7 @@
       margin: 0 auto;
     }
 
+    /* Card Container & Smooth Scaling */
     .card {
       background: var(--card-bg);
       border-radius: 12px;
@@ -348,12 +351,34 @@
       display: flex;
       flex-direction: column;
       border: 1px solid var(--border);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                  box-shadow 0.4s ease, 
+                  border-color 0.3s ease;
+      will-change: transform;
+      animation: fadeIn 0.4s ease-in-out;
     }
 
+    .card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 16px 32px -8px rgba(255, 71, 87, 0.25);
+      border-color: var(--primary);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Image Zoom Effect on Hover */
     .card-img { 
       height: 140px; 
       background-size: cover; 
       background-position: center; 
+      transition: transform 0.5s ease;
+    }
+
+    .card:hover .card-img {
+      transform: scale(1.08);
     }
     
     .card-body { 
@@ -382,6 +407,11 @@
       border-radius: 6px;
       font-size: 0.8rem;
       font-weight: bold;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover .rating {
+      transform: scale(1.1);
     }
 
     .card-desc { 
@@ -407,6 +437,12 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      animation: popIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
     }
     
     .btn-add, .btn-qty {
@@ -417,6 +453,13 @@
       border-radius: 6px;
       cursor: pointer;
       font-weight: 600;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-add:active, .btn-qty:active, .cart-btn:active {
+      transform: scale(0.92);
     }
 
     .btn-qty {
@@ -449,6 +492,7 @@
       cursor: pointer;
       font-weight: bold;
       font-size: 0.95rem;
+      transition: transform 0.15s ease;
     }
 
     /* Page 3: Checkout, Billing & Payment View */
@@ -563,7 +607,7 @@
       background: #1b1c1c;
     }
 
-    /* Modal Styles (Locations & Receipts) */
+    /* Modal Styles */
     .modal {
       display: none;
       position: fixed;
@@ -661,114 +705,6 @@
       #bill-receipt-content, #bill-receipt-content * { visibility: visible; }
       #bill-receipt-content { position: absolute; left: 0; top: 0; width: 100%; color: #000; }
     }
-    /* Card Entrance & Hover Animations */
-.card {
-  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
-  animation: fadeIn 0.4s ease-in-out;
-}
-
-.card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Button Click Pulse Effect */
-.btn-add, .btn-qty, .cart-btn {
-  transition: transform 0.15s ease, background-color 0.2s ease;
-}
-
-.btn-add:active, .btn-qty:active, .cart-btn:active {
-  transform: scale(0.93);
-}
-
-/* Glassmorphic Sticky Header */
-header {
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-/* Card Container & Smooth Scaling */
-.card {
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-              box-shadow 0.4s ease, 
-              border-color 0.3s ease;
-  will-change: transform;
-}
-
-/* Hover State: Elevation + Subtle Glow */
-.card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 16px 32px -8px rgba(255, 71, 87, 0.25);
-  border-color: var(--primary);
-}
-
-/* Image Zoom Effect on Hover */
-.card-img {
-  transition: transform 0.5s ease;
-  overflow: hidden;
-}
-
-.card:hover .card-img {
-  transform: scale(1.08);
-}
-
-/* Rating Badge Pulse */
-.rating {
-  transition: transform 0.3s ease;
-}
-
-.card:hover .rating {
-  transform: scale(1.1);
-}
-
-/* Animated Add to Cart Button State */
-.btn-add {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.btn-add:active {
-  transform: scale(0.9);
-}
-
-/* Add Button Ripple / Click Glow */
-.btn-add::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 5px;
-  height: 5px;
-  background: rgba(255, 255, 255, 0.5);
-  opacity: 0;
-  border-radius: 100%;
-  transform: scale(1, 1) translate(-50%, -50%);
-  transform-origin: 50% 50%;
-}
-
-.btn-add:focus:not(:active)::after {
-  animation: ripple 0.6s ease-out;
-}
-
-@keyframes ripple {
-  0% { transform: scale(0, 0) translate(-50%, -50%); opacity: 0.5; }
-  100% { transform: scale(20, 20) translate(-50%, -50%); opacity: 0; }
-}
-
-/* Quantity Control Bounce Effect */
-.qty-controls {
-  animation: popIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-@keyframes popIn {
-  0% { transform: scale(0.7); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
   </style>
 </head>
 <body>
@@ -937,20 +873,7 @@ header {
   </div>
 
   <script>
-    // Replace hardcoded dishes array declaration near line 519 with let
     let dishes = [];
-
-    // Fetch dishes from server API on page load
-    async function loadDishesFromBackend() {
-      try {
-        const response = await fetch('/api/dishes');
-        dishes = await response.json();
-        filterDishes();
-      } catch (error) {
-        console.error("Failed to load dishes from server:", error);
-      }
-    }
-
     let currentCategory = "All";
     let cart = JSON.parse(localStorage.getItem('suuuuiiiimato_cart')) || {};
     let currentUser = localStorage.getItem('suuuuiiiimato_user') || null;
@@ -1050,46 +973,13 @@ header {
 
     /* Food Catalog (Page 2) */
     function renderDishes(items) {
-  const grid = document.getElementById('food-grid');
-  grid.innerHTML = '';
+      const grid = document.getElementById('food-grid');
+      grid.innerHTML = '';
 
-  if (items.length === 0) {
-    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:3rem; color:var(--muted);">No dishes found matching your search.</div>';
-    return;
-  }
-
-  items.forEach(dish => {
-    const qty = cart[dish.id] || 0;
-    const card = document.createElement('div');
-    card.className = 'card';
-    
-    const actionHtml = qty > 0 
-      ? `<div class="qty-controls">
-           <button class="btn-qty" onclick="updateQuantity(${dish.id}, -1)">-</button>
-           <span>${qty}</span>
-           <button class="btn-qty" onclick="updateQuantity(${dish.id}, 1)">+</button>
-         </div>`
-      : `<button class="btn-add" onclick="updateQuantity(${dish.id}, 1)">Add +</button>`;
-
-    card.innerHTML = `
-      <div style="overflow: hidden; border-radius: 12px 12px 0 0;">
-        <div class="card-img" style="background-image: url('${dish.img}')"></div>
-      </div>
-      <div class="card-body">
-        <div class="card-header-info">
-          <div class="card-title">${sanitizeText(dish.name)}</div>
-          <div class="rating">★ ${dish.rating}</div>
-        </div>
-        <div class="card-desc">${sanitizeText(dish.desc)}</div>
-        <div class="card-footer">
-          <span class="price">₹${dish.price.toFixed(2)}</span>
-          ${actionHtml}
-        </div>
-      </div>
-    `;
-    grid.appendChild(card);
-  });
-}
+      if (items.length === 0) {
+        grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:3rem; color:var(--muted);">No dishes found matching your search.</div>';
+        return;
+      }
 
       items.forEach(dish => {
         const qty = cart[dish.id] || 0;
@@ -1105,7 +995,9 @@ header {
           : `<button class="btn-add" onclick="updateQuantity(${dish.id}, 1)">Add +</button>`;
 
         card.innerHTML = `
-          <div class="card-img" style="background-image: url('${dish.img}')"></div>
+          <div style="overflow: hidden; border-radius: 12px 12px 0 0;">
+            <div class="card-img" style="background-image: url('${dish.img}')"></div>
+          </div>
           <div class="card-body">
             <div class="card-header-info">
               <div class="card-title">${sanitizeText(dish.name)}</div>
@@ -1216,14 +1108,32 @@ header {
       document.getElementById('checkout-user-address').innerText = userLocation || "Not specified";
     }
 
-    function handlePaymentSubmit(event) {
+    async function handlePaymentSubmit(event) {
       event.preventDefault();
       const selectedPayment = document.querySelector('input[name="payment"]:checked').value;
-      generateInvoice(selectedPayment);
-      openModal('receipt');
+      
+      try {
+        const response = await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cart })
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+          generateInvoice(selectedPayment, result.orderId, result.estimatedTime);
+          openModal('receipt');
+        } else {
+          generateInvoice(selectedPayment);
+          openModal('receipt');
+        }
+      } catch (e) {
+        generateInvoice(selectedPayment);
+        openModal('receipt');
+      }
     }
 
-    function generateInvoice(paymentMethod) {
+    function generateInvoice(paymentMethod, orderId = null, estimatedTime = "25-35 mins") {
       const receiptContent = document.getElementById('bill-receipt-content');
       let subtotal = 0;
       let itemsHtml = '';
@@ -1250,7 +1160,8 @@ header {
       receiptContent.innerHTML = `
         <div class="bill-header">
           <h3>🍕 suuuuiiiimato Invoice</h3>
-          <p>Order ID: #SUIII-${Math.floor(100000 + Math.random() * 900000)}</p>
+          <p>Order ID: #${orderId || 'SUIII-' + Math.floor(100000 + Math.random() * 900000)}</p>
+          <p>Est. Delivery: ${estimatedTime}</p>
           <p><small>${new Date().toLocaleString('en-IN')}</small></p>
         </div>
         <p><strong>Customer:</strong> ${sanitizeText(currentUser)}</p>
@@ -1331,7 +1242,9 @@ header {
       try {
         const response = await fetch('/api/dishes');
         dishes = await response.json();
-        filterDishes();
+        if (document.getElementById('page-food').classList.contains('active-page')) {
+          filterDishes();
+        }
       } catch (error) {
         console.error("Failed to load dishes from server:", error);
       }
@@ -1349,23 +1262,24 @@ header {
         navigateTo('auth');
       }
     });
+
     // Attach 3D tilt effect on dynamically loaded food cards
-document.getElementById('food-grid').addEventListener('mousemove', (e) => {
-  const card = e.target.closest('.card');
-  if (!card) return;
+    document.getElementById('food-grid').addEventListener('mousemove', (e) => {
+      const card = e.target.closest('.card');
+      if (!card) return;
 
-  const rect = card.getBoundingClientRect();
-  const x = e.clientX - rect.left - rect.width / 2;
-  const y = e.clientY - rect.top - rect.height / 2;
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
 
-  card.style.transform = `perspective(1000px) rotateX(${-y / 20}deg) rotateY(${x / 20}deg) translateY(-8px)`;
-});
+      card.style.transform = `perspective(1000px) rotateX(${-y / 20}deg) rotateY(${x / 20}deg) translateY(-8px)`;
+    });
 
-document.getElementById('food-grid').addEventListener('mouseleave', (e) => {
-  const card = e.target.closest('.card');
-  if (!card) return;
-  card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
-}, true);
+    document.getElementById('food-grid').addEventListener('mouseleave', (e) => {
+      const card = e.target.closest('.card');
+      if (!card) return;
+      card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+    }, true);
   </script>
 </body>
 </html>
