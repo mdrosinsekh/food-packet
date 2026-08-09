@@ -790,37 +790,59 @@
     </div>
   </header>
 
-  <!-- ================= PAGE 1: SIGNUP / LOGIN ================= -->
-  <section id="page-auth" class="page-view active-page">
-    <div class="auth-landing-container">
-      <div class="auth-card">
-        <h2 class="auth-title">Welcome to suuuuiiiimato</h2>
-        <p class="auth-subtitle">Please log in or sign up to explore dishes & order</p>
-        
-        <div class="auth-tabs">
-          <button class="auth-tab-btn active" id="tab-login" onclick="switchAuthTab('login')">Log In</button>
-          <button class="auth-tab-btn" id="tab-signup" onclick="switchAuthTab('signup')">Sign Up</button>
+ <!-- ================= PAGE 1: SIGNUP / LOGIN ================= -->
+<section id="page-auth" class="page-view active-page">
+  <div class="auth-landing-container">
+    <div class="auth-card">
+      <div class="auth-header-row">
+        <h2 class="auth-title" id="auth-heading">Login</h2>
+        <button style="background:none; border:none; font-size:1.4rem; cursor:pointer; color:#696969;" onclick="navigateTo('food')">&times;</button>
+      </div>
+
+      <!-- Login View -->
+      <form id="login-form" class="auth-form" onsubmit="handleAuthSubmit(event, 'login')">
+        <div class="phone-input-group">
+          <div class="country-select">
+            <span>🇮🇳</span>
+            <span>+91</span>
+            <span style="font-size: 0.7rem; color: #828282;">▼</span>
+          </div>
+          <input type="tel" id="login-phone" placeholder="Phone" pattern="[0-9]{10}" required>
         </div>
 
-        <!-- Login Form -->
-        <form id="login-form" class="auth-form" onsubmit="handleAuthSubmit(event, 'login')">
-          <input type="email" id="login-email" placeholder="Email Address" required>
-          <input type="password" id="login-password" placeholder="Password" required>
-          <input type="text" id="login-location" placeholder="Delivery Location (e.g. Mumbai, MH)" required>
-          <button type="submit">Log In & Continue 🚀</button>
-        </form>
+        <button type="submit" class="btn-otp">Send One Time Password</button>
 
-        <!-- Signup Form -->
-        <form id="signup-form" class="auth-form" style="display: none;" onsubmit="handleAuthSubmit(event, 'signup')">
-          <input type="text" id="signup-name" placeholder="Full Name" required>
-          <input type="email" id="signup-email" placeholder="Email Address" required>
-          <input type="password" id="signup-password" placeholder="Password" required>
-          <input type="text" id="signup-location" placeholder="Delivery Location (e.g. Delhi, DL)" required>
-          <button type="submit">Create Account & Order ✨</button>
-        </form>
-      </div>
+        <div class="auth-divider">
+          <span>or</span>
+        </div>
+
+        <button type="button" class="btn-social" onclick="useEmailLogin()">
+          <span style="color:#ef4f5f;">✉</span> Continue with Email
+        </button>
+        <button type="button" class="btn-social" onclick="useGoogleLogin()">
+          <span>🌐</span> Sign in with Google
+        </button>
+
+        <div class="auth-footer-text">
+          New to SUUUUIIIImato? <a onclick="switchAuthTab('signup')">Create account</a>
+        </div>
+      </form>
+
+      <!-- Signup View -->
+      <form id="signup-form" class="auth-form" style="display: none;" onsubmit="handleAuthSubmit(event, 'signup')">
+        <input type="text" id="signup-name" placeholder="Full Name" style="padding:0.85rem; border:1px solid #cfcfcf; border-radius:8px; outline:none;" required>
+        <input type="email" id="signup-email" placeholder="Email Address" style="padding:0.85rem; border:1px solid #cfcfcf; border-radius:8px; outline:none;" required>
+        <input type="text" id="signup-location" placeholder="Delivery Address (e.g. Mumbai, MH)" style="padding:0.85rem; border:1px solid #cfcfcf; border-radius:8px; outline:none;" required>
+        
+        <button type="submit" class="btn-otp" style="margin-top:10px;">Create Account & Continue ✨</button>
+
+        <div class="auth-footer-text">
+          Already have an account? <a onclick="switchAuthTab('login')">Log in</a>
+        </div>
+      </form>
     </div>
-  </section>
+  </div>
+</section>
 
   <!-- ================= PAGE 2: FOOD SELECTION & CATEGORIES ================= -->
   <section id="page-food" class="page-view">
@@ -997,28 +1019,56 @@
 
     /* Auth Handlers (Page 1) */
     function switchAuthTab(type) {
-      document.getElementById('tab-login').classList.toggle('active', type === 'login');
-      document.getElementById('tab-signup').classList.toggle('active', type === 'signup');
-      document.getElementById('login-form').style.display = type === 'login' ? 'flex' : 'none';
-      document.getElementById('signup-form').style.display = type === 'signup' ? 'flex' : 'none';
-    }
+  const heading = document.getElementById('auth-heading');
+  const loginForm = document.getElementById('login-form');
+  const signupForm = document.getElementById('signup-form');
 
-    function handleAuthSubmit(event, type) {
-      event.preventDefault();
-      if (type === 'signup') {
-        currentUser = document.getElementById('signup-name').value.trim() || "User";
-        userLocation = document.getElementById('signup-location').value.trim() || "Default Location";
-      } else {
-        const email = document.getElementById('login-email').value.trim();
-        currentUser = email ? email.split('@')[0] : "User";
-        userLocation = document.getElementById('login-location').value.trim() || "Default Location";
-      }
+  if (type === 'signup') {
+    heading.innerText = 'Sign Up';
+    loginForm.style.display = 'none';
+    signupForm.style.display = 'flex';
+  } else {
+    heading.innerText = 'Login';
+    loginForm.style.display = 'flex';
+    signupForm.style.display = 'none';
+  }
+}
 
-      localStorage.setItem('suuuuiiiimato_user', currentUser);
-      localStorage.setItem('suuuuiiiimato_location', userLocation);
+function useEmailLogin() {
+  const email = prompt("Enter your Email Address:");
+  if (email) {
+    currentUser = email.split('@')[0];
+    userLocation = "Default Location";
+    localStorage.setItem('suuuuiiiimato_user', currentUser);
+    localStorage.setItem('suuuuiiiimato_location', userLocation);
+    navigateTo('food');
+  }
+}
 
-      navigateTo('food');
-    }
+function useGoogleLogin() {
+  currentUser = "GoogleUser";
+  userLocation = "Default Location";
+  localStorage.setItem('suuuuiiiimato_user', currentUser);
+  localStorage.setItem('suuuuiiiimato_location', userLocation);
+  navigateTo('food');
+}
+
+function handleAuthSubmit(event, type) {
+  event.preventDefault();
+  if (type === 'signup') {
+    currentUser = document.getElementById('signup-name').value.trim() || "User";
+    userLocation = document.getElementById('signup-location').value.trim() || "Default Location";
+  } else {
+    const phone = document.getElementById('login-phone').value.trim();
+    currentUser = `User_${phone.slice(-4)}`;
+    userLocation = "Default Location";
+  }
+
+  localStorage.setItem('suuuuiiiimato_user', currentUser);
+  localStorage.setItem('suuuuiiiimato_location', userLocation);
+
+  navigateTo('food');
+}
 
     function logout() {
       currentUser = null;
@@ -1102,7 +1152,7 @@
         cart[id] = newQty;
       }
 
-      localStorage.setItem('suuuuiiiimato_cart', JSON.stringify(cart));
+      localStorage.setItem('SUUUUIIIImato_cart', JSON.stringify(cart));
       updateCartUI();
       filterDishes();
     }
@@ -1219,7 +1269,7 @@
 
       receiptContent.innerHTML = `
         <div class="bill-header">
-          <h3>🍕 suuuuiiiimato Invoice</h3>
+          <h3>SUUUUIIIImato Invoice</h3>
           <p>Order ID: #${orderId || 'SUIII-' + Math.floor(100000 + Math.random() * 900000)}</p>
           <p>Est. Delivery: ${estimatedTime}</p>
           <p><small>${new Date().toLocaleString('en-IN')}</small></p>
