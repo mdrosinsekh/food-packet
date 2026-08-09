@@ -1397,5 +1397,87 @@ function handleAuthSubmit(event, type) {
       card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
     }, true);
   </script>
+  <!-- Firebase Module Script -->
+<script type="module">
+  // Import Firebase App & Auth SDKs
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+  import { 
+    getAuth, 
+    GoogleAuthProvider, 
+    signInWithPopup, 
+    RecaptchaVerifier, 
+    signInWithPhoneNumber 
+  } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyCs_fbnUC6AEhcBKH1JeZ2aNfdd3quuMcE",
+    authDomain: "suuuuiiimato-app.firebaseapp.com",
+    projectId: "suuuuiiimato-app",
+    storageBucket: "suuuuiiimato-app.firebasestorage.app",
+    messagingSenderId: "542789556203",
+    appId: "1:542789556203:web:af7a46c323212e05f7ebae"
+  };
+
+  // Initialize Firebase App & Authentication
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const googleProvider = new GoogleAuthProvider();
+
+  // Google Sign-In Handler
+  window.useGoogleLogin = async function() {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      
+      currentUser = user.displayName || user.email.split('@')[0];
+      userLocation = localStorage.getItem('suuuuiiiimato_location') || "Default Location";
+      
+      localStorage.setItem('suuuuiiiimato_user', currentUser);
+      localStorage.setItem('suuuuiiiimato_location', userLocation);
+      
+      navigateTo('food');
+    } catch (error) {
+      console.error("Google Login Error:", error);
+      alert("Google Sign-In failed: " + error.message);
+    }
+  };
+
+  // Setup reCAPTCHA for Phone Verification
+  window.setupRecaptcha = function() {
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        'size': 'invisible'
+      });
+    }
+  };
+
+  // Phone OTP Trigger Handler
+  window.sendPhoneOTP = async function(phoneNumber) {
+    try {
+      setupRecaptcha();
+      const formattedPhone = phoneNumber.startsWith('+') ? phoneNumber : `+91${phoneNumber}`;
+      const confirmationResult = await signInWithPhoneNumber(auth, formattedPhone, window.recaptchaVerifier);
+      
+      const code = prompt("Enter the 6-digit OTP sent to your phone:");
+      if (code) {
+        const result = await confirmationResult.confirm(code);
+        const user = result.user;
+        
+        currentUser = `User_${user.phoneNumber.slice(-4)}`;
+        userLocation = localStorage.getItem('suuuuiiiimato_location') || "Default Location";
+        
+        localStorage.setItem('suuuuiiiimato_user', currentUser);
+        localStorage.setItem('suuuuiiiimato_location', userLocation);
+        
+        navigateTo('food');
+      }
+    } catch (error) {
+      console.error("Phone Auth Error:", error);
+      alert("Phone login failed: " + error.message);
+    }
+  };
+</script>
+
 </body>
 </html>
