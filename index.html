@@ -833,14 +833,14 @@
       </form>
 
       <!-- Signup View -->
-      <form id="signup-form" class="auth-form" style="display: none;" onsubmit="handleAuthSubmit(event, 'signup')">
-        <input type="text" id="signup-name" placeholder="Full Name" required>
-        <input type="email" id="signup-email" placeholder="Email Address" required>
-        <input type="text" id="signup-location" placeholder="Delivery Address (e.g. Mumbai, MH)" required>
+      <form id="signup-form" style="display: none; flex-direction: column; gap: 12px; width: 100%;" onsubmit="handleAuthSubmit(event, 'signup')">
+        <input type="text" id="signup-name" placeholder="Full Name" style="width: 100%; padding: 0.85rem 1rem; border: 1px solid #cfcfcf; border-radius: 8px; outline: none; font-size: 0.95rem; background: #fff; color: #1c1c1c; box-sizing: border-box;" required>
+        <input type="email" id="signup-email" placeholder="Email Address" style="width: 100%; padding: 0.85rem 1rem; border: 1px solid #cfcfcf; border-radius: 8px; outline: none; font-size: 0.95rem; background: #fff; color: #1c1c1c; box-sizing: border-box;" required>
+        <input type="text" id="signup-location" placeholder="Delivery Address (e.g. Mumbai, MH)" style="width: 100%; padding: 0.85rem 1rem; border: 1px solid #cfcfcf; border-radius: 8px; outline: none; font-size: 0.95rem; background: #fff; color: #1c1c1c; box-sizing: border-box;" required>
+        
+        <button type="submit" class="btn-otp" style="width: 100%; margin-top: 6px;">Create Account & Continue ✨</button>
 
-        <button type="submit" class="btn-otp" style="margin-top: 6px;">Create Account & Continue ✨</button>
-
-        <div class="auth-footer-text">
+        <div class="auth-footer-text" style="width: 100%; text-align: left;">
           Already have an account? <a onclick="switchAuthTab('login')">Log in</a>
         </div>
       </form>
@@ -1030,7 +1030,7 @@
   if (type === 'signup') {
     heading.innerText = 'Sign Up';
     loginForm.style.display = 'none';
-    signupForm.style.display = 'flex';
+    signupForm.style.display = 'flex'; // Uses inline flex-direction: column
   } else {
     heading.innerText = 'Login';
     loginForm.style.display = 'flex';
