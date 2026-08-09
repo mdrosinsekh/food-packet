@@ -1,17 +1,11 @@
 {
-  "name": "starter",
-  "private": true,
+  "name": "suuuuiiiimato-app",
+  "version": "1.0.0",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "version": "1.0.0",
-  "description": "[Edit in StackBlitz next generation editor ⚡️](https://stackblitz.com/~/github.com/mdrosinsekh/food-packet)",
-  "main": "index.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^4.19.2"
   }
 }
