@@ -661,6 +661,36 @@
       #bill-receipt-content, #bill-receipt-content * { visibility: visible; }
       #bill-receipt-content { position: absolute; left: 0; top: 0; width: 100%; color: #000; }
     }
+    /* Card Entrance & Hover Animations */
+.card {
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Button Click Pulse Effect */
+.btn-add, .btn-qty, .cart-btn {
+  transition: transform 0.15s ease, background-color 0.2s ease;
+}
+
+.btn-add:active, .btn-qty:active, .cart-btn:active {
+  transform: scale(0.93);
+}
+
+/* Glassmorphic Sticky Header */
+header {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
   </style>
 </head>
 <body>
