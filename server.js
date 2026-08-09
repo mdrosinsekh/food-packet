@@ -4,10 +4,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-// Serve index.html and static assets directly from root
 app.use(express.static(path.join(__dirname, '.')));
 
-// Centralized Food Database
+// Server-side database
 const dishes = [
   { id: 1, name: "Classic Cheeseburger", category: "Burgers", price: 249.00, rating: 4.7, desc: "Juicy beef patty with cheddar cheese, lettuce, and special sauce.", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80" },
   { id: 2, name: "Pepperoni Pizza", category: "Pizza", price: 499.00, rating: 4.8, desc: "Hand-tossed crust topped with fresh mozzarella and sliced pepperoni.", img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=500&q=80" },
@@ -25,21 +24,18 @@ app.get('/api/dishes', (req, res) => {
 });
 
 app.post('/api/orders', (req, res) => {
-  const { user, location, cart, paymentMethod } = req.body;
-  
+  const { cart } = req.body;
   if (!cart || Object.keys(cart).length === 0) {
     return res.status(400).json({ success: false, message: "Cart cannot be empty" });
   }
 
-  const orderId = `SUIII-${Math.floor(100000 + Math.random() * 900000)}`;
   res.json({
     success: true,
-    orderId,
-    estimatedTime: "25-35 mins",
-    status: "Preparing"
+    orderId: `SUIII-${Math.floor(100000 + Math.random() * 900000)}`,
+    estimatedTime: "25-35 mins"
   });
 });
 
 app.listen(PORT, () => {
-  console.log(`SUUUUIIIImato server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
