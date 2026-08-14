@@ -807,9 +807,6 @@
             <span>or</span>
           </div>
 
-          <button type="button" class="btn-social" style="width: 100%;" onclick="useEmailLogin()">
-            <span style="color:#ef4f5f;">✉</span> Continue with Email Link
-          </button>
           <button type="button" class="btn-social" style="width: 100%;" onclick="useGoogleLogin()">
             <span>🌐</span> Sign in with Google
           </button>
@@ -947,7 +944,7 @@
     ];
     let currentCategory = "All";
     let cart = JSON.parse(localStorage.getItem('suuuuiiiimato_cart')) || {};
-    let currentUser = null; // Controlled by Firebase Auth observer
+    let currentUser = null; // Managed dynamically by Firebase Auth observer
     let userLocation = localStorage.getItem('suuuuiiiimato_location') || "Mumbai, India";
     let currentTheme = localStorage.getItem('suuuuiiiimato_theme') || 'light';
 
@@ -1314,7 +1311,7 @@
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
 
-    // 1. Unified Auth State Observer (Step 3)
+    // 1. Unified Auth State Observer
     onAuthStateChanged(auth, (user) => {
       if (user) {
         currentUser = user.displayName || user.email || (user.phoneNumber ? `User_${user.phoneNumber.slice(-4)}` : "Foodie");
@@ -1337,21 +1334,36 @@
       }
     };
 
-    // 3. Setup invisible reCAPTCHA
-    function setupRecaptcha() {
-      if (!window.recaptchaVerifier) {
-        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-          'size': 'invisible'
-        });
+    // 3. Safe reCAPTCHA Verifier
+    function getRecaptchaVerifier() {
+      if (window.recaptchaVerifier) {
+        try {
+          window.recaptchaVerifier.clear();
+        } catch (e) {
+          console.warn("reCAPTCHA clear warning:", e);
+        }
+        window.recaptchaVerifier = null;
       }
+
+      const container = document.getElementById('recaptcha-container');
+      if (container) {
+        container.innerHTML = '';
+      }
+
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        'size': 'invisible'
+      });
+
+      return window.recaptchaVerifier;
     }
 
     // 4. Phone OTP Sign-In
     window.sendPhoneOTP = async function(phoneNumber) {
       try {
-        setupRecaptcha();
+        const appVerifier = getRecaptchaVerifier();
         const formattedPhone = phoneNumber.startsWith('+') ? phoneNumber : `+91${phoneNumber}`;
-        const confirmationResult = await signInWithPhoneNumber(auth, formattedPhone, window.recaptchaVerifier);
+        
+        const confirmationResult = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
         
         const code = prompt("Enter the 6-digit OTP sent to your phone:");
         if (code) {
@@ -1360,10 +1372,15 @@
       } catch (error) {
         console.error("Phone Auth Error:", error);
         alert("Phone login failed: " + error.message);
+        
         if (window.recaptchaVerifier) {
-          window.recaptchaVerifier.clear();
+          try {
+            window.recaptchaVerifier.clear();
+          } catch (e) {}
           window.recaptchaVerifier = null;
         }
+        const container = document.getElementById('recaptcha-container');
+        if (container) container.innerHTML = '';
       }
     };
 
