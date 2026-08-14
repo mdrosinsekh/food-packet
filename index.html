@@ -171,7 +171,6 @@
     }
 
     /* Page 1: Auth Landing View */
-    /* Full Screen Background Image Container */
     .auth-landing-container {
       display: flex;
       justify-content: center;
@@ -182,7 +181,6 @@
                   url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
     }
 
-    /* Modal Card Style */
     .auth-card {
       background: #ffffff;
       border-radius: 12px;
@@ -207,7 +205,6 @@
       color: #1c1c1c;
     }
 
-    /* Phone Input Container with Country Code */
     .phone-input-group {
       display: flex;
       align-items: center;
@@ -243,7 +240,6 @@
       color: #1c1c1c;
     }
 
-    /* Primary Action Button (Red) */
     .btn-otp {
       width: 100%;
       background: #ef4f5f;
@@ -261,7 +257,6 @@
       background: #e03546;
     }
 
-    /* Divider "or" */
     .auth-divider {
       display: flex;
       align-items: center;
@@ -282,7 +277,6 @@
       padding: 0 10px;
     }
 
-    /* Secondary Social Buttons */
     .btn-social {
       width: 100%;
       background: #ffffff;
@@ -305,7 +299,6 @@
       background: #f8f8f8;
     }
 
-    /* Footer Switch Text */
     .auth-footer-text {
       margin-top: 1.5rem;
       padding-top: 1.2rem;
@@ -397,7 +390,6 @@
       margin: 0 auto;
     }
 
-    /* Card Container & Smooth Scaling */
     .card {
       background: var(--card-bg);
       border-radius: 12px;
@@ -424,7 +416,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Image Zoom Effect on Hover */
     .card-img { 
       height: 140px; 
       background-size: cover; 
@@ -550,7 +541,7 @@
       transition: transform 0.15s ease;
     }
 
-    /* Page 3: Checkout, Billing & Payment View */
+    /* Page 3: Checkout */
     .checkout-container {
       max-width: 800px;
       margin: 2rem auto 4rem auto;
@@ -783,67 +774,66 @@
         <option value="sunset"> Sunset</option>
       </select>
       <div id="auth-container">
-        <!-- Rendered dynamically -->
+        <!-- Dynamic header auth info -->
       </div>
     </div>
   </header>
 
- <!-- ================= PAGE 1: SIGNUP / LOGIN ================= -->
-<section id="page-auth" class="page-view active-page">
-  <div class="auth-landing-container">
-    <div class="auth-card">
-      <div class="auth-header-row">
-        <h2 class="auth-title" id="auth-heading">Login</h2>
-        <button style="background:none; border:none; font-size:1.4rem; cursor:pointer; color:#696969;" onclick="navigateTo('food')">&times;</button>
-      </div>
+  <!-- ================= PAGE 1: SIGNUP / LOGIN ================= -->
+  <section id="page-auth" class="page-view active-page">
+    <div class="auth-landing-container">
+      <div class="auth-card">
+        <div class="auth-header-row">
+          <h2 class="auth-title" id="auth-heading">Login</h2>
+          <button style="background:none; border:none; font-size:1.4rem; cursor:pointer; color:#696969;" onclick="navigateTo('food')">&times;</button>
+        </div>
 
-      <!-- Login View -->
-      <form id="login-form" class="auth-form" style="display: flex; flex-direction: column; gap: 12px; width: 100%;" onsubmit="handleAuthSubmit(event, 'login')">
-        <!-- Invisible reCAPTCHA Container for Firebase Phone Verification -->
-        <div id="recaptcha-container"></div>
+        <!-- Phone Login Form -->
+        <form id="login-form" class="auth-form" style="display: flex; flex-direction: column; gap: 12px; width: 100%;" onsubmit="handleAuthSubmit(event, 'login')">
+          <div id="recaptcha-container"></div>
 
-        <div class="phone-input-group" style="width: 100%;">
-          <div class="country-select">
-            <span>🇮🇳</span>
-            <span>+91</span>
-            <span style="font-size: 0.7rem; color: #828282;">▼</span>
+          <div class="phone-input-group" style="width: 100%;">
+            <div class="country-select">
+              <span>🇮🇳</span>
+              <span>+91</span>
+              <span style="font-size: 0.7rem; color: #828282;">▼</span>
+            </div>
+            <input type="tel" id="login-phone" placeholder="Phone" pattern="[0-9]{10}" required>
           </div>
-          <input type="tel" id="login-phone" placeholder="Phone" pattern="[0-9]{10}" required>
-        </div>
 
-        <button type="submit" class="btn-otp" style="width: 100%;">Send One Time Password</button>
+          <button type="submit" class="btn-otp" style="width: 100%;">Send One Time Password</button>
 
-        <div class="auth-divider" style="width: 100%;">
-          <span>or</span>
-        </div>
+          <div class="auth-divider" style="width: 100%;">
+            <span>or</span>
+          </div>
 
-        <button type="button" class="btn-social" style="width: 100%;" onclick="useEmailLogin()">
-          <span style="color:#ef4f5f;">✉</span> Continue with Email
-        </button>
-        <button type="button" class="btn-social" style="width: 100%;" onclick="useGoogleLogin()">
-          <span>🌐</span> Sign in with Google
-        </button>
+          <button type="button" class="btn-social" style="width: 100%;" onclick="useEmailLogin()">
+            <span style="color:#ef4f5f;">✉</span> Continue with Email Link
+          </button>
+          <button type="button" class="btn-social" style="width: 100%;" onclick="useGoogleLogin()">
+            <span>🌐</span> Sign in with Google
+          </button>
 
-        <div class="auth-footer-text" style="width: 100%; text-align: left;">
-          New to SUUUUIIIImato? <a onclick="switchAuthTab('signup')">Create account</a>
-        </div>
-      </form>
+          <div class="auth-footer-text" style="width: 100%; text-align: left;">
+            New to SUUUUIIIImato? <a onclick="switchAuthTab('signup')">Create account</a>
+          </div>
+        </form>
 
-      <!-- Signup View -->
-      <form id="signup-form" style="display: none; flex-direction: column; gap: 12px; width: 100%;" onsubmit="handleAuthSubmit(event, 'signup')">
-        <input type="text" id="signup-name" placeholder="Full Name" style="width: 100%; padding: 0.85rem 1rem; border: 1px solid #cfcfcf; border-radius: 8px; outline: none; font-size: 0.95rem; background: #fff; color: #1c1c1c; box-sizing: border-box;" required>
-        <input type="email" id="signup-email" placeholder="Email Address" style="width: 100%; padding: 0.85rem 1rem; border: 1px solid #cfcfcf; border-radius: 8px; outline: none; font-size: 0.95rem; background: #fff; color: #1c1c1c; box-sizing: border-box;" required>
-        <input type="text" id="signup-location" placeholder="Delivery Address (e.g. Mumbai, MH)" style="width: 100%; padding: 0.85rem 1rem; border: 1px solid #cfcfcf; border-radius: 8px; outline: none; font-size: 0.95rem; background: #fff; color: #1c1c1c; box-sizing: border-box;" required>
-        
-        <button type="submit" class="btn-otp" style="width: 100%; margin-top: 6px;">Create Account & Continue ✨</button>
+        <!-- Signup Form -->
+        <form id="signup-form" style="display: none; flex-direction: column; gap: 12px; width: 100%;" onsubmit="handleAuthSubmit(event, 'signup')">
+          <input type="text" id="signup-name" placeholder="Full Name" style="width: 100%; padding: 0.85rem 1rem; border: 1px solid #cfcfcf; border-radius: 8px; outline: none; font-size: 0.95rem; background: #fff; color: #1c1c1c; box-sizing: border-box;" required>
+          <input type="email" id="signup-email" placeholder="Email Address" style="width: 100%; padding: 0.85rem 1rem; border: 1px solid #cfcfcf; border-radius: 8px; outline: none; font-size: 0.95rem; background: #fff; color: #1c1c1c; box-sizing: border-box;" required>
+          <input type="text" id="signup-location" placeholder="Delivery Address (e.g. Mumbai, MH)" style="width: 100%; padding: 0.85rem 1rem; border: 1px solid #cfcfcf; border-radius: 8px; outline: none; font-size: 0.95rem; background: #fff; color: #1c1c1c; box-sizing: border-box;" required>
+          
+          <button type="submit" class="btn-otp" style="width: 100%; margin-top: 6px;">Sign in with Google instead ✨</button>
 
-        <div class="auth-footer-text" style="width: 100%; text-align: left;">
-          Already have an account? <a onclick="switchAuthTab('login')">Log in</a>
-        </div>
-      </form>
+          <div class="auth-footer-text" style="width: 100%; text-align: left;">
+            Already have an account? <a onclick="switchAuthTab('login')">Log in</a>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
   <!-- ================= PAGE 2: FOOD SELECTION & CATEGORIES ================= -->
   <section id="page-food" class="page-view">
@@ -866,7 +856,7 @@
     </div>
 
     <div class="food-grid" id="food-grid">
-      <!-- Dynamic Content Rendered Here -->
+      <!-- Dynamic dishes -->
     </div>
 
     <div class="cart-bar">
@@ -883,22 +873,18 @@
       <button class="btn-back" onclick="navigateTo('food')">← Back to Menu</button>
       
       <div class="checkout-grid">
-        <!-- Order Summary Column -->
         <div class="checkout-card">
           <h3>🛒 Order Summary</h3>
-          <div id="checkout-items-list">
-            <!-- Dynamically populated -->
-          </div>
+          <div id="checkout-items-list"></div>
 
           <div style="border-top: 1px dashed var(--border); margin-top: 1rem; padding-top: 1rem;">
             <div class="bill-summary-row"><span>Item Subtotal</span><span id="bill-subtotal">₹0.00</span></div>
-            <div class="bill-summary-row"><span>GST & Restaurant Charges (5%)</span><span id="bill-gst">₹0.00</span></div>
+            <div class="bill-summary-row"><span>GST & Charges (5%)</span><span id="bill-gst">₹0.00</span></div>
             <div class="bill-summary-row"><span>Delivery Fee</span><span>₹40.00</span></div>
             <div class="bill-summary-row total-row"><span>Grand Total</span><span id="bill-grand-total">₹0.00</span></div>
           </div>
         </div>
 
-        <!-- Delivery & Payment Column -->
         <div class="checkout-card">
           <h3>📍 Delivery Details</h3>
           <p style="font-size: 0.95rem; margin-bottom: 0.3rem;"><strong>Customer:</strong> <span id="checkout-user-name">User</span></p>
@@ -926,12 +912,11 @@
     </div>
   </section>
 
-  <!-- Modals (Location & Receipt) -->
+  <!-- Modals -->
   <div class="modal" id="app-modal" onclick="handleBackdropClick(event)">
     <div class="modal-content">
       <button class="close-btn" onclick="closeModal()">&times;</button>
       
-      <!-- Location View -->
       <div id="location-view" style="display: none;">
         <h2>Set Delivery Address</h2>
         <button type="button" class="gps-btn" onclick="fetchGPSLocation()">
@@ -943,24 +928,27 @@
         </form>
       </div>
 
-      <!-- Bill Receipt Modal View -->
       <div id="receipt-view" style="display: none;">
         <h2>Order Confirmed! 🎉</h2>
-        <div class="bill-receipt" id="bill-receipt-content">
-          <!-- Dynamically Generated Invoice -->
-        </div>
+        <div class="bill-receipt" id="bill-receipt-content"></div>
         <button class="btn-pay" style="background: #0d0e0e;" onclick="window.print()">🖨️ Print Receipt</button>
         <button onclick="finishOrderAndReturn()" style="width: 100%; background: transparent; border: 1px solid var(--border); color: var(--text); padding: 0.7rem; border-radius: 6px; margin-top: 8px; cursor: pointer; font-weight: 600;">Back to Home</button>
       </div>
     </div>
   </div>
 
+  <!-- UI & App Logic -->
   <script>
-    let dishes = [];
+    let dishes = [
+      { id: 1, name: "Classic Cheeseburger", category: "Burgers", price: 189, rating: 4.5, desc: "Juicy grilled beef patty with aged cheddar cheese", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400" },
+      { id: 2, name: "Margherita Pizza", category: "Pizza", price: 299, rating: 4.8, desc: "Fresh basil, mozzarella, and san marzano tomato sauce", img: "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=400" },
+      { id: 3, name: "Salmon Nigiri", category: "Sushi", price: 349, rating: 4.9, desc: "Fresh Atlantic salmon over seasoned sushi rice", img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=400" },
+      { id: 4, name: "Spicy Ramen Bowl", category: "Asian", price: 259, rating: 4.7, desc: "Rich pork broth with noodles, soft boiled egg, and nori", img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400" }
+    ];
     let currentCategory = "All";
     let cart = JSON.parse(localStorage.getItem('suuuuiiiimato_cart')) || {};
-    let currentUser = localStorage.getItem('suuuuiiiimato_user') || null;
-    let userLocation = localStorage.getItem('suuuuiiiimato_location') || null;
+    let currentUser = null; // Controlled by Firebase Auth observer
+    let userLocation = localStorage.getItem('suuuuiiiimato_location') || "Mumbai, India";
     let currentTheme = localStorage.getItem('suuuuiiiimato_theme') || 'light';
 
     function sanitizeText(str) {
@@ -976,9 +964,7 @@
       document.getElementById('theme-selector').value = theme;
     }
 
-    /* Router / Navigation Logic */
     function navigateTo(page) {
-      // Guard route: cannot view food or checkout without user authentication
       if ((page === 'food' || page === 'checkout') && !currentUser) {
         page = 'auth';
       }
@@ -1009,7 +995,7 @@
         authContainer.innerHTML = `
           <div class="user-profile">
             <span>👤 ${sanitizeText(currentUser)}</span>
-            <button class="btn-auth" onclick="logout()">Log Out</button>
+            <button class="btn-auth" onclick="window.firebaseSignOut()">Log Out</button>
           </div>
         `;
       } else {
@@ -1018,7 +1004,6 @@
       }
     }
 
-    /* Auth Handlers (Page 1) */
     function switchAuthTab(type) {
       const heading = document.getElementById('auth-heading');
       const loginForm = document.getElementById('login-form');
@@ -1028,34 +1013,17 @@
         heading.innerText = 'Sign Up';
         loginForm.style.display = 'none';
         signupForm.style.display = 'flex';
-        signupForm.style.flexDirection = 'column';
       } else {
         heading.innerText = 'Login';
         loginForm.style.display = 'flex';
-        loginForm.style.flexDirection = 'column';
         signupForm.style.display = 'none';
-      }
-    }
-
-    function useEmailLogin() {
-      const email = prompt("Enter your Email Address:");
-      if (email) {
-        currentUser = email.split('@')[0];
-        userLocation = "Default Location";
-        localStorage.setItem('suuuuiiiimato_user', currentUser);
-        localStorage.setItem('suuuuiiiimato_location', userLocation);
-        navigateTo('food');
       }
     }
 
     function handleAuthSubmit(event, type) {
       event.preventDefault();
       if (type === 'signup') {
-        currentUser = document.getElementById('signup-name').value.trim() || "User";
-        userLocation = document.getElementById('signup-location').value.trim() || "Default Location";
-        localStorage.setItem('suuuuiiiimato_user', currentUser);
-        localStorage.setItem('suuuuiiiimato_location', userLocation);
-        navigateTo('food');
+        window.useGoogleLogin();
       } else {
         const phone = document.getElementById('login-phone').value.trim();
         if (phone.length === 10) {
@@ -1066,18 +1034,6 @@
       }
     }
 
-    function logout() {
-      currentUser = null;
-      userLocation = null;
-      cart = {};
-      localStorage.removeItem('suuuuiiiimato_user');
-      localStorage.removeItem('suuuuiiiimato_location');
-      localStorage.removeItem('suuuuiiiimato_cart');
-      updateCartUI();
-      navigateTo('auth');
-    }
-
-    /* Food Catalog (Page 2) */
     function renderDishes(items) {
       const grid = document.getElementById('food-grid');
       grid.innerHTML = '';
@@ -1179,7 +1135,6 @@
       navigateTo('checkout');
     }
 
-    /* Checkout & Billing (Page 3) */
     function renderCheckoutSummary() {
       const container = document.getElementById('checkout-items-list');
       container.innerHTML = '';
@@ -1214,29 +1169,11 @@
       document.getElementById('checkout-user-address').innerText = userLocation || "Not specified";
     }
 
-    async function handlePaymentSubmit(event) {
+    function handlePaymentSubmit(event) {
       event.preventDefault();
       const selectedPayment = document.querySelector('input[name="payment"]:checked').value;
-      
-      try {
-        const response = await fetch('/api/orders', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ cart })
-        });
-        const result = await response.json();
-        
-        if (result.success) {
-          generateInvoice(selectedPayment, result.orderId, result.estimatedTime);
-          openModal('receipt');
-        } else {
-          generateInvoice(selectedPayment);
-          openModal('receipt');
-        }
-      } catch (e) {
-        generateInvoice(selectedPayment);
-        openModal('receipt');
-      }
+      generateInvoice(selectedPayment);
+      openModal('receipt');
     }
 
     function generateInvoice(paymentMethod, orderId = null, estimatedTime = "25-35 mins") {
@@ -1293,7 +1230,6 @@
       navigateTo('food');
     }
 
-    /* Modal Management */
     function openLocationModal() {
       openModal('location');
       document.getElementById('edit-location-input').value = userLocation || '';
@@ -1343,107 +1279,74 @@
       );
     }
 
-    // Fetch dishes from server API on page load
-    async function loadDishesFromBackend() {
-      try {
-        const response = await fetch('/api/dishes');
-        dishes = await response.json();
-        if (document.getElementById('page-food').classList.contains('active-page')) {
-          filterDishes();
-        }
-      } catch (error) {
-        console.error("Failed to load dishes from server:", error);
-      }
-    }
-
-    // App Initialization
     document.addEventListener('DOMContentLoaded', () => {
       changeTheme(currentTheme);
       updateCartUI();
-      loadDishesFromBackend();
-
-      if (currentUser) {
-        navigateTo('food');
-      } else {
-        navigateTo('auth');
-      }
     });
-
-    // Attach 3D tilt effect on dynamically loaded food cards
-    document.getElementById('food-grid').addEventListener('mousemove', (e) => {
-      const card = e.target.closest('.card');
-      if (!card) return;
-
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left - rect.width / 2;
-      const y = e.clientY - rect.top - rect.height / 2;
-
-      card.style.transform = `perspective(1000px) rotateX(${-y / 20}deg) rotateY(${x / 20}deg) translateY(-8px)`;
-    });
-
-    document.getElementById('food-grid').addEventListener('mouseleave', (e) => {
-      const card = e.target.closest('.card');
-      if (!card) return;
-      card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
-    }, true);
   </script>
 
-  <!-- Firebase Module Script -->
+  <!-- ================= FIREBASE AUTH SDK & OBSERVER ================= -->
   <script type="module">
-    // Import Firebase App & Auth SDKs
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { 
       getAuth, 
+      onAuthStateChanged,
       GoogleAuthProvider, 
       signInWithPopup, 
       RecaptchaVerifier, 
-      signInWithPhoneNumber 
-    } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+      signInWithPhoneNumber,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-    // Your web app's Firebase configuration
+    // Firebase configuration
     const firebaseConfig = {
-      apiKey: "AIzaSyCs_fbnUC6AEhcBKH1JeZ2aNfdd3quuMcE",
+      apiKey: "AIzaSyAhl_j4euMMU9c3yEg9R-wHxAb79ZeF6Bc",
       authDomain: "suuuuiiimato-app.firebaseapp.com",
       projectId: "suuuuiiimato-app",
       storageBucket: "suuuuiiimato-app.firebasestorage.app",
-      messagingSenderId: "542789556203",
-      appId: "1:542789556203:web:af7a46c323212e05f7ebae"
+      messagingSenderId: "467371241387",
+      appId: "1:467371241387:web:f91b5f804288ffde9ecee",
+      measurementId: "G-X1VQGE98WE"
     };
 
-    // Initialize Firebase App & Authentication
+    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
 
-    // Google Sign-In Handler
+    // 1. Unified Auth State Observer (Step 3)
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUser = user.displayName || user.email || (user.phoneNumber ? `User_${user.phoneNumber.slice(-4)}` : "Foodie");
+        updateHeaderState();
+        navigateTo('food');
+      } else {
+        currentUser = null;
+        updateHeaderState();
+        navigateTo('auth');
+      }
+    });
+
+    // 2. Google Sign-In
     window.useGoogleLogin = async function() {
       try {
-        const result = await signInWithPopup(auth, googleProvider);
-        const user = result.user;
-        
-        currentUser = user.displayName || user.email.split('@')[0];
-        userLocation = localStorage.getItem('suuuuiiiimato_location') || "Default Location";
-        
-        localStorage.setItem('suuuuiiiimato_user', currentUser);
-        localStorage.setItem('suuuuiiiimato_location', userLocation);
-        
-        navigateTo('food');
+        await signInWithPopup(auth, googleProvider);
       } catch (error) {
         console.error("Google Login Error:", error);
         alert("Google Sign-In failed: " + error.message);
       }
     };
 
-    // Setup reCAPTCHA for Phone Verification
-    window.setupRecaptcha = function() {
+    // 3. Setup invisible reCAPTCHA
+    function setupRecaptcha() {
       if (!window.recaptchaVerifier) {
         window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
           'size': 'invisible'
         });
       }
-    };
+    }
 
-    // Phone OTP Trigger Handler
+    // 4. Phone OTP Sign-In
     window.sendPhoneOTP = async function(phoneNumber) {
       try {
         setupRecaptcha();
@@ -1452,23 +1355,29 @@
         
         const code = prompt("Enter the 6-digit OTP sent to your phone:");
         if (code) {
-          const result = await confirmationResult.confirm(code);
-          const user = result.user;
-          
-          currentUser = `User_${user.phoneNumber.slice(-4)}`;
-          userLocation = localStorage.getItem('suuuuiiiimato_location') || "Default Location";
-          
-          localStorage.setItem('suuuuiiiimato_user', currentUser);
-          localStorage.setItem('suuuuiiiimato_location', userLocation);
-          
-          navigateTo('food');
+          await confirmationResult.confirm(code);
         }
       } catch (error) {
         console.error("Phone Auth Error:", error);
         alert("Phone login failed: " + error.message);
+        if (window.recaptchaVerifier) {
+          window.recaptchaVerifier.clear();
+          window.recaptchaVerifier = null;
+        }
+      }
+    };
+
+    // 5. Firebase Native Sign-Out
+    window.firebaseSignOut = async function() {
+      try {
+        await signOut(auth);
+        cart = {};
+        localStorage.removeItem('suuuuiiiimato_cart');
+        updateCartUI();
+      } catch (error) {
+        console.error("Logout Error:", error);
       }
     };
   </script>
-
 </body>
 </html>
